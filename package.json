@@ -1,0 +1,21 @@
+{
+  "name": "isu-football-tournament",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ISU Football Tournament management system (Express + MySQL + HTML/CSS/JS).",
+  "main": "backend/server.js",
+  "scripts": {
+    "setup-db": "node backend/setup-db.js",
+    "dev": "node backend/server.js",
+    "start": "node backend/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.11.3",
+    "zod": "^3.23.8"
+  }
+}

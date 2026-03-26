@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ISU Football Tournament</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <section id="authScreen" class="auth-screen">
+      <div class="auth-shell">
+        <div class="auth-brand">
+          <div class="auth-kicker">ISU Football Tournament</div>
+          <h1>Enter The System</h1>
+          <div class="muted">Choose your role, sign in, and enter the tournament dashboard.</div>
+        </div>
+
+        <div class="role-toggle" id="roleToggle">
+          <button class="toggle-btn active" type="button" data-role="player">Player</button>
+          <button class="toggle-btn" type="button" data-role="organizer">Organizer</button>
+        </div>
+
+        <form id="entryLoginForm" class="entry-form">
+          <label class="field">
+            <span id="loginUserLabel">Username</span>
+            <input id="entryUsername" class="input" type="text" autocomplete="username" required />
+          </label>
+          <label class="field">
+            <span id="loginSecretLabel">Password</span>
+            <input id="entrySecret" class="input" type="password" autocomplete="current-password" required />
+          </label>
+          <button class="btn auth-submit" id="entrySubmit" type="submit">Enter System</button>
+        </form>
+
+        <div id="entryMessage" class="muted auth-message hidden"></div>
+      </div>
+    </section>
+
+    <div class="app hidden" id="appShell">
+      <header class="topbar">
+        <div>
+          <div class="title">ISU Football Tournament</div>
+          <div class="subtitle" id="dashboardSubtitle">Tournament dashboard</div>
+        </div>
+        <div class="topbar-actions">
+          <div id="sessionBadge" class="session-badge hidden"></div>
+          <button class="btn" id="switchUser" type="button">Log Out</button>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="card wide hidden" id="highlightsSection">
+          <div class="card-head">
+            <div>
+              <h2>Leaderboard Highlights</h2>
+              <div class="muted">
+                Quick access cards for the top goals, assists, yellow cards, and red cards leaders.
+              </div>
+            </div>
+          </div>
+          <div id="highlightGrid" class="highlights-grid"></div>
+        </section>
+
+        <section class="card wide hidden" id="playerSection">
+          <div class="card-head">
+            <div>
+              <h2>Player Updates</h2>
+              <div class="muted">
+                Signed-in players can follow the live tournament data from this view.
+              </div>
+            </div>
+            <div class="portal-actions">
+              <button class="btn" id="refreshPortal" type="button">Refresh Updates</button>
+            </div>
+          </div>
+
+          <div id="playerAuthMessage" class="muted auth-message"></div>
+          <div id="playerDashboard"></div>
+        </section>
+
+        <section class="card wide hidden" id="organizerSection">
+          <div class="card-head">
+            <div>
+              <h2>Organizer Control Panel</h2>
+              <div class="muted">
+                Organizers can create, update, and delete teams, players, matches, stat lines, and team-of-season entries here.
+              </div>
+            </div>
+            <div class="portal-actions">
+              <button class="btn" id="refreshOrganizer" type="button">Refresh Panel</button>
+            </div>
+          </div>
+
+          <div id="organizerMessage" class="muted auth-message"></div>
+
+          <div id="organizerPanel">
+            <div class="admin-grid">
+              <section class="portal-panel">
+                <h3>Manage Teams</h3>
+                <div class="muted">Use the same team number to update an existing team.</div>
+                <form id="adminTeamForm" class="management-form">
+                  <label class="field">
+                    <span>Team Number</span>
+                    <input id="teamNumberInput" class="input" type="number" min="0" required />
+                  </label>
+                  <label class="field">
+                    <span>Team Name</span>
+                    <input id="teamNameInput" class="input" type="text" required />
+                  </label>
+                  <label class="field field-full">
+                    <span>Captain Name</span>
+                    <input id="captainNameInput" class="input" type="text" />
+                  </label>
+                  <div class="form-actions field-full">
+                    <button class="btn" type="submit">Save Team</button>
+                    <button class="btn ghost" type="button" data-clear-form="adminTeamForm">Clear</button>
+                  </div>
+                </form>
+                <form id="adminTeamDeleteForm" class="delete-form">
+                  <label class="field">
+                    <span>Delete Team Number</span>
+                    <input id="deleteTeamNumberInput" class="input" type="number" min="0" required />
+                  </label>
+                  <button class="btn danger" type="submit">Delete Team</button>
+                </form>
+              </section>
+
+              <section class="portal-panel">
+                <h3>Manage Players</h3>
+                <div class="muted">Update player name, position, and assigned team from here.</div>
+                <form id="adminPlayerForm" class="management-form">
+                  <label class="field">
+                    <span>Player Number</span>
+                    <input id="playerNumberAdminInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field">
+                    <span>Player Name</span>
+                    <input id="playerNameAdminInput" class="input" type="text" required />
+                  </label>
+                  <label class="field">
+                    <span>Position</span>
+                    <input id="playerPositionInput" class="input" type="text" required />
+                  </label>
+                  <label class="field">
+                    <span>Player Team Number</span>
+                    <input id="playerTeamInput" class="input" type="number" min="1" required />
+                  </label>
+                  <div class="form-actions field-full">
+                    <button class="btn" type="submit">Save Player</button>
+                    <button class="btn ghost" type="button" data-clear-form="adminPlayerForm">Clear</button>
+                  </div>
+                </form>
+                <form id="adminPlayerDeleteForm" class="delete-form">
+                  <label class="field">
+                    <span>Delete Player Number</span>
+                    <input id="deletePlayerNumberInput" class="input" type="number" min="1" required />
+                  </label>
+                  <button class="btn danger" type="submit">Delete Player</button>
+                </form>
+              </section>
+
+              <section class="portal-panel">
+                <h3>Manage Matches</h3>
+                <div class="muted">Create or update fixtures, results, and match status.</div>
+                <form id="adminMatchForm" class="management-form">
+                  <label class="field">
+                    <span>Match ID</span>
+                    <input id="matchIdInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field">
+                    <span>Status</span>
+                    <select id="matchStatusInput" class="input" required>
+                      <option value="scheduled">scheduled</option>
+                      <option value="played">played</option>
+                      <option value="postponed">postponed</option>
+                      <option value="cancelled">cancelled</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <span>Match Date</span>
+                    <input id="matchDateInput" class="input" type="date" required />
+                  </label>
+                  <label class="field">
+                    <span>Match Time</span>
+                    <input id="matchTimeInput" class="input" type="time" required />
+                  </label>
+                  <label class="field">
+                    <span>Home Team Number</span>
+                    <input id="homeTeamInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field">
+                    <span>Away Team Number</span>
+                    <input id="awayTeamInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field">
+                    <span>Referee ID</span>
+                    <input id="refereeIdInput" class="input" type="number" min="1" />
+                  </label>
+                  <label class="field">
+                    <span>Home Goals</span>
+                    <input id="homeGoalsInput" class="input" type="number" min="0" value="0" required />
+                  </label>
+                  <label class="field">
+                    <span>Away Goals</span>
+                    <input id="awayGoalsInput" class="input" type="number" min="0" value="0" required />
+                  </label>
+                  <div class="form-actions field-full">
+                    <button class="btn" type="submit">Save Match</button>
+                    <button class="btn ghost" type="button" data-clear-form="adminMatchForm">Clear</button>
+                  </div>
+                </form>
+                <form id="adminMatchDeleteForm" class="delete-form">
+                  <label class="field">
+                    <span>Delete Match ID</span>
+                    <input id="deleteMatchIdInput" class="input" type="number" min="1" required />
+                  </label>
+                  <button class="btn danger" type="submit">Delete Match</button>
+                </form>
+              </section>
+
+              <section class="portal-panel">
+                <h3>Manage Team Of Season</h3>
+                <div class="muted">Add or update a team-of-season row from the same form.</div>
+                <form id="adminTosForm" class="management-form">
+                  <label class="field">
+                    <span>TOS ID</span>
+                    <input id="tosIdInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field">
+                    <span>Team Number</span>
+                    <input id="tosTeamNumberInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field field-full">
+                    <span>Team Name</span>
+                    <input id="tosTeamNameInput" class="input" type="text" required />
+                  </label>
+                  <div class="form-actions field-full">
+                    <button class="btn" type="submit">Save Team Of Season</button>
+                    <button class="btn ghost" type="button" data-clear-form="adminTosForm">Clear</button>
+                  </div>
+                </form>
+                <form id="adminTosDeleteForm" class="delete-form">
+                  <label class="field">
+                    <span>Delete TOS ID</span>
+                    <input id="deleteTosIdInput" class="input" type="number" min="1" required />
+                  </label>
+                  <button class="btn danger" type="submit">Delete Team Of Season</button>
+                </form>
+              </section>
+
+              <section class="portal-panel">
+                <h3>Manage Player Stats</h3>
+                <div class="muted">These stat lines feed Top Goals, Top Assists, Yellow Cards, and Red Cards automatically.</div>
+                <form id="adminStatsForm" class="management-form">
+                  <label class="field">
+                    <span>Match ID</span>
+                    <input id="statMatchIdInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field">
+                    <span>Player Number</span>
+                    <input id="statPlayerNumberInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field field-full">
+                    <span>State</span>
+                    <input id="statStateInput" class="input" type="text" value="played" required />
+                  </label>
+                  <label class="field">
+                    <span>Goals</span>
+                    <input id="statGoalsInput" class="input" type="number" min="0" value="0" required />
+                  </label>
+                  <label class="field">
+                    <span>Assists</span>
+                    <input id="statAssistsInput" class="input" type="number" min="0" value="0" required />
+                  </label>
+                  <label class="field">
+                    <span>Yellow Cards</span>
+                    <input id="statYellowInput" class="input" type="number" min="0" value="0" required />
+                  </label>
+                  <label class="field">
+                    <span>Red Cards</span>
+                    <input id="statRedInput" class="input" type="number" min="0" value="0" required />
+                  </label>
+                  <div class="form-actions field-full">
+                    <button class="btn" type="submit">Save Stat Line</button>
+                    <button class="btn ghost" type="button" data-clear-form="adminStatsForm">Clear</button>
+                  </div>
+                </form>
+                <form id="adminStatsDeleteForm" class="delete-form delete-form-wide">
+                  <label class="field">
+                    <span>Delete Match ID</span>
+                    <input id="deleteStatMatchIdInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field">
+                    <span>Delete Player Number</span>
+                    <input id="deleteStatPlayerNumberInput" class="input" type="number" min="1" required />
+                  </label>
+                  <button class="btn danger" type="submit">Delete Stat Line</button>
+                </form>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <section class="card wide hidden" id="datasetSection">
+          <div class="card-head">
+            <div>
+              <h2 id="datasetTitle">Teams</h2>
+              <div id="datasetDescription" class="muted">
+                Browse teams, players, stats, team members, fixtures, and season awards.
+              </div>
+            </div>
+            <button class="btn" id="reloadDataset" type="button">Reload View</button>
+          </div>
+          <div id="datasetNav" class="dataset-nav"></div>
+          <div id="datasetMeta" class="row meta-row"></div>
+          <div id="datasetTable"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
