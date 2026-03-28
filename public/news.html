@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ISU Football Tournament News</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/news.css" />
+  </head>
+  <body>
+    <div class="news-shell">
+      <header class="news-topbar">
+        <div>
+          <div class="auth-kicker">ISU Football Tournament</div>
+          <div class="news-topbar-title">News Hub</div>
+        </div>
+        <div class="news-topbar-actions">
+          <div id="newsSessionBadge" class="session-badge hidden"></div>
+          <a class="btn ghost" href="/">Back To Dashboard</a>
+          <button class="btn" id="refreshNewsPage" type="button">Refresh Page</button>
+        </div>
+      </header>
+
+      <main class="news-main">
+        <section class="news-hero">
+          <div class="news-hero-copy">
+            <div class="auth-kicker">Weekly Bulletin</div>
+            <h1>Tournament News, Spotlight Awards, And Fresh Storylines</h1>
+            <p class="news-hero-text">
+              Follow the latest weekly tournament news, discover the newest player and team honors, and keep up with the moments shaping the ISU Football Tournament.
+            </p>
+            <div class="news-hero-actions">
+              <a class="btn" href="/">Open Dashboard</a>
+              <button class="btn ghost" id="jumpToFeed" type="button">Jump To Weekly News</button>
+            </div>
+            <div id="newsPageMessage" class="muted auth-message"></div>
+          </div>
+        </section>
+
+        <section class="news-section">
+          <div class="section-heading">
+            <div>
+              <h2>Spotlight Awards</h2>
+              <p class="muted">Current best player of the week, best team of the week, and best team of the month selections.</p>
+            </div>
+          </div>
+          <div id="honorGrid" class="honor-grid"></div>
+        </section>
+
+        <section class="news-section" id="weeklyNewsSection">
+          <div class="section-heading">
+            <div>
+              <h2>Weekly News</h2>
+              <p class="muted">Published weekly updates, tournament highlights, and official news posts.</p>
+            </div>
+          </div>
+          <div id="newsFeed" class="news-feed"></div>
+        </section>
+
+        <section class="news-section hidden" id="newsEditorSection">
+          <div class="section-heading">
+            <div>
+              <h2>Organizer News Desk</h2>
+              <p class="muted">Organizers can publish weekly updates and manage the spotlight awards from here.</p>
+            </div>
+          </div>
+
+          <div id="newsEditorMessage" class="muted auth-message"></div>
+
+          <div class="news-admin-grid">
+            <section class="portal-panel">
+              <h3>Publish Weekly News</h3>
+              <div class="muted">Leave News ID empty to create a new post. Use the same ID later if you want to update it.</div>
+              <form id="weeklyNewsForm" class="management-form">
+                <label class="field">
+                  <span>News ID</span>
+                  <input id="newsIdInput" class="input" type="number" min="1" />
+                </label>
+                <label class="field">
+                  <span>Week Label</span>
+                  <input id="newsWeekInput" class="input" type="text" required />
+                </label>
+                <label class="field field-full">
+                  <span>Headline</span>
+                  <input id="newsHeadlineInput" class="input" type="text" required />
+                </label>
+                <label class="field field-full">
+                  <span>Summary</span>
+                  <textarea id="newsSummaryInput" class="input textarea-input" required></textarea>
+                </label>
+                <label class="field field-full">
+                  <span>Body</span>
+                  <textarea id="newsBodyInput" class="input textarea-input body-input" required></textarea>
+                </label>
+                <label class="field">
+                  <span>Published On</span>
+                  <input id="newsDateInput" class="input" type="date" required />
+                </label>
+                <label class="field">
+                  <span>Featured Team Number</span>
+                  <input id="newsFeaturedTeamInput" class="input" type="number" min="1" />
+                </label>
+                <div class="form-actions field-full">
+                  <button class="btn" type="submit">Save Weekly News</button>
+                  <button class="btn ghost" id="clearWeeklyNewsForm" type="button">Clear</button>
+                </div>
+              </form>
+              <form id="weeklyNewsDeleteForm" class="delete-form">
+                <label class="field">
+                  <span>Delete News ID</span>
+                  <input id="deleteNewsIdInput" class="input" type="number" min="1" required />
+                </label>
+                <button class="btn danger" type="submit">Delete News</button>
+              </form>
+            </section>
+
+            <section class="portal-panel">
+              <h3>Manage Spotlight Awards</h3>
+              <div class="muted" id="honorHelperText">Best player of the week uses a team number plus a jersey number. Team awards use a team number.</div>
+              <form id="spotlightAwardForm" class="management-form">
+                <label class="field">
+                  <span>Award Type</span>
+                  <select id="honorTypeInput" class="input" required>
+                    <option value="best_player_of_week">Best Player Of The Week</option>
+                    <option value="best_team_of_week">Best Team Of The Week</option>
+                    <option value="best_team_of_month">Best Team Of The Month</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Player Number</span>
+                  <input id="honorPlayerInput" class="input" type="number" min="1" />
+                </label>
+                <label class="field">
+                  <span>Team Number</span>
+                  <input id="honorTeamInput" class="input" type="number" min="1" />
+                </label>
+                <label class="field field-full">
+                  <span>Description</span>
+                  <textarea id="honorDescriptionInput" class="input textarea-input"></textarea>
+                </label>
+                <div class="form-actions field-full">
+                  <button class="btn" type="submit">Save Spotlight Award</button>
+                  <button class="btn ghost" id="clearSpotlightForm" type="button">Clear</button>
+                </div>
+              </form>
+              <form id="spotlightAwardDeleteForm" class="delete-form">
+                <label class="field">
+                  <span>Delete Award Type</span>
+                  <select id="deleteHonorTypeInput" class="input" required>
+                    <option value="best_player_of_week">Best Player Of The Week</option>
+                    <option value="best_team_of_week">Best Team Of The Week</option>
+                    <option value="best_team_of_month">Best Team Of The Month</option>
+                  </select>
+                </label>
+                <button class="btn danger" type="submit">Delete Award</button>
+              </form>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/news.js"></script>
+  </body>
+</html>

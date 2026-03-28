@@ -65,7 +65,7 @@ async function main() {
 
 main().catch((error) => {
   if (error.code === "ER_ACCESS_DENIED_ERROR") {
-    console.error("MySQL rejected the username/password in backend/.env. Update DB_PASSWORD and run setup again.");
+    console.error("MySQL rejected the username/password in public/backend/.env. Update DB_PASSWORD and run setup again.");
     process.exit(1);
   }
 

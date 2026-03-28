@@ -29,10 +29,13 @@ CREATE TABLE IF NOT EXISTS team_of_the_season (
 -- players
 -- =========================
 CREATE TABLE IF NOT EXISTS players (
-    player_number INT PRIMARY KEY,
+    player_id INT AUTO_INCREMENT PRIMARY KEY,
+    player_number INT NOT NULL,
     player_name VARCHAR(100) NOT NULL,
     position VARCHAR(50) NOT NULL,
     player_team INT NOT NULL,
+
+    CONSTRAINT uq_player_team_number UNIQUE (player_team, player_number),
 
     CONSTRAINT fk_player_team
         FOREIGN KEY (player_team)
@@ -46,10 +49,10 @@ CREATE TABLE IF NOT EXISTS players (
 -- =========================
 CREATE TABLE IF NOT EXISTS team_members (
     team_number INT NOT NULL,
-    player_number INT NOT NULL,
+    player_id INT NOT NULL,
 
-    PRIMARY KEY (team_number, player_number),
-    UNIQUE (player_number),
+    PRIMARY KEY (team_number, player_id),
+    UNIQUE (player_id),
 
     CONSTRAINT fk_team_members_team
         FOREIGN KEY (team_number)
@@ -58,8 +61,8 @@ CREATE TABLE IF NOT EXISTS team_members (
         ON DELETE CASCADE,
 
     CONSTRAINT fk_team_members_player
-        FOREIGN KEY (player_number)
-        REFERENCES players(player_number)
+        FOREIGN KEY (player_id)
+        REFERENCES players(player_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -111,7 +114,7 @@ CREATE TABLE IF NOT EXISTS matches (
 CREATE TABLE IF NOT EXISTS stats (
     stat_id INT AUTO_INCREMENT PRIMARY KEY,
     match_id INT NOT NULL,
-    player_number INT NOT NULL,
+    player_id INT NOT NULL,
     state VARCHAR(50),
     goals INT DEFAULT 0,
     assists INT DEFAULT 0,
@@ -125,13 +128,72 @@ CREATE TABLE IF NOT EXISTS stats (
         ON DELETE CASCADE,
 
     CONSTRAINT fk_stats_player
-        FOREIGN KEY (player_number)
-        REFERENCES players(player_number)
+        FOREIGN KEY (player_id)
+        REFERENCES players(player_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
 
-    CONSTRAINT uq_match_player UNIQUE (match_id, player_number)
+    CONSTRAINT uq_match_player UNIQUE (match_id, player_id)
 );
+
+-- =========================
+-- weekly_news
+-- =========================
+CREATE TABLE IF NOT EXISTS weekly_news (
+    news_id INT AUTO_INCREMENT PRIMARY KEY,
+    week_label VARCHAR(100) NOT NULL,
+    headline VARCHAR(180) NOT NULL,
+    summary VARCHAR(320) NOT NULL,
+    body TEXT NOT NULL,
+    published_on DATE NOT NULL,
+    featured_team_number INT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_weekly_news_team
+        FOREIGN KEY (featured_team_number)
+        REFERENCES teams(team_number)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+);
+
+-- =========================
+-- spotlight_awards
+-- =========================
+CREATE TABLE IF NOT EXISTS spotlight_awards (
+    honor_type VARCHAR(50) PRIMARY KEY,
+    player_id INT NULL,
+    team_number INT NULL,
+    title VARCHAR(120) NOT NULL,
+    description VARCHAR(500) NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_spotlight_player
+        FOREIGN KEY (player_id)
+        REFERENCES players(player_id)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL,
+
+    CONSTRAINT fk_spotlight_team
+        FOREIGN KEY (team_number)
+        REFERENCES teams(team_number)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+);
+
+ALTER TABLE spotlight_awards
+    MODIFY honor_type VARCHAR(50) NOT NULL;
+
+DELETE FROM spotlight_awards
+WHERE honor_type = 'player_of_month';
+
+UPDATE spotlight_awards
+SET honor_type = 'best_player_of_week'
+WHERE honor_type = 'player_of_week';
+
+UPDATE spotlight_awards
+SET honor_type = 'best_team_of_month'
+WHERE honor_type = 'team_of_month';
 
 -- =========================
 -- fixtures view
@@ -211,8 +273,8 @@ SELECT
     COALESCE(SUM(s.goals), 0) AS total_goals
 FROM players p
 JOIN teams t ON p.player_team = t.team_number
-LEFT JOIN stats s ON p.player_number = s.player_number
-GROUP BY p.player_number, p.player_name, p.position, t.team_name
+LEFT JOIN stats s ON p.player_id = s.player_id
+GROUP BY p.player_id, p.player_number, p.player_name, p.position, t.team_name
 HAVING COALESCE(SUM(s.goals), 0) > 0
 ORDER BY total_goals DESC, p.player_name ASC;
 
@@ -229,8 +291,8 @@ SELECT
     COALESCE(SUM(s.assists), 0) AS total_assists
 FROM players p
 JOIN teams t ON p.player_team = t.team_number
-LEFT JOIN stats s ON p.player_number = s.player_number
-GROUP BY p.player_number, p.player_name, p.position, t.team_name
+LEFT JOIN stats s ON p.player_id = s.player_id
+GROUP BY p.player_id, p.player_number, p.player_name, p.position, t.team_name
 HAVING COALESCE(SUM(s.assists), 0) > 0
 ORDER BY total_assists DESC, p.player_name ASC;
 
@@ -247,8 +309,8 @@ SELECT
     COALESCE(SUM(s.yellow_cards), 0) AS total_yellow_cards
 FROM players p
 JOIN teams t ON p.player_team = t.team_number
-LEFT JOIN stats s ON p.player_number = s.player_number
-GROUP BY p.player_number, p.player_name, p.position, t.team_name
+LEFT JOIN stats s ON p.player_id = s.player_id
+GROUP BY p.player_id, p.player_number, p.player_name, p.position, t.team_name
 HAVING COALESCE(SUM(s.yellow_cards), 0) > 0
 ORDER BY total_yellow_cards DESC, p.player_name ASC;
 
@@ -265,8 +327,8 @@ SELECT
     COALESCE(SUM(s.red_cards), 0) AS total_red_cards
 FROM players p
 JOIN teams t ON p.player_team = t.team_number
-LEFT JOIN stats s ON p.player_number = s.player_number
-GROUP BY p.player_number, p.player_name, p.position, t.team_name
+LEFT JOIN stats s ON p.player_id = s.player_id
+GROUP BY p.player_id, p.player_number, p.player_name, p.position, t.team_name
 HAVING COALESCE(SUM(s.red_cards), 0) > 0
 ORDER BY total_red_cards DESC, p.player_name ASC;
 
@@ -285,5 +347,5 @@ FROM team_members tm
 JOIN teams t
     ON tm.team_number = t.team_number
 JOIN players p
-    ON tm.player_number = p.player_number
+    ON tm.player_id = p.player_id
 ORDER BY t.team_name, p.player_number;

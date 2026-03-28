@@ -39,6 +39,13 @@ function postJSON(url, body) {
   });
 }
 
+function putJSON(url, body) {
+  return requestJSON(url, {
+    method: "PUT",
+    body: JSON.stringify(body)
+  });
+}
+
 function deleteJSON(url) {
   return requestJSON(url, { method: "DELETE" });
 }
@@ -133,7 +140,9 @@ const state = {
   entryRole: "player",
   role: null,
   player: null,
-  organizer: null
+  organizer: null,
+  chatSeeded: false,
+  loadedTeamNumber: null
 };
 
 function escapeHtml(value) {
@@ -200,6 +209,157 @@ function clearForm(formId) {
     document.getElementById("statAssistsInput").value = "0";
     document.getElementById("statYellowInput").value = "0";
     document.getElementById("statRedInput").value = "0";
+    return;
+  }
+
+  if (formId === "adminTeamForm") {
+    document.getElementById("adminTeamLookupForm")?.reset();
+    setTeamEditorMode();
+  }
+}
+
+function setTeamEditorMode(team = null) {
+  const editorState = document.getElementById("teamEditorState");
+  const updateButton = document.getElementById("updateTeamButton");
+  const hiddenTarget = document.getElementById("teamUpdateTargetInput");
+  const teamNumberInput = document.getElementById("teamNumberInput");
+  const lookupInput = document.getElementById("loadTeamNumberInput");
+  const loadedTeamNumber = team?.team_number ?? null;
+
+  state.loadedTeamNumber = loadedTeamNumber;
+
+  if (editorState) {
+    editorState.textContent = loadedTeamNumber
+      ? `Update mode. Team ${loadedTeamNumber} is loaded. Change the details below, then click Update Loaded Team.`
+      : "Create mode. Add a new team here.";
+  }
+
+  if (updateButton) {
+    updateButton.disabled = !loadedTeamNumber;
+  }
+
+  if (hiddenTarget) {
+    hiddenTarget.value = loadedTeamNumber ? String(loadedTeamNumber) : "";
+  }
+
+  if (teamNumberInput) {
+    teamNumberInput.readOnly = Boolean(loadedTeamNumber);
+  }
+
+  if (lookupInput && loadedTeamNumber) {
+    lookupInput.value = String(loadedTeamNumber);
+  }
+}
+
+function fillTeamForm(team) {
+  const teamNumberInput = document.getElementById("teamNumberInput");
+  const teamNameInput = document.getElementById("teamNameInput");
+  const captainNameInput = document.getElementById("captainNameInput");
+
+  if (teamNumberInput) {
+    teamNumberInput.value = team.team_number;
+  }
+
+  if (teamNameInput) {
+    teamNameInput.value = team.team_name || "";
+  }
+
+  if (captainNameInput) {
+    captainNameInput.value = team.captain_name || "";
+  }
+
+  setTeamEditorMode(team);
+}
+
+function formatChatText(value) {
+  return escapeHtml(value || "").replace(/\n/g, "<br />");
+}
+
+function appendChatMessage(role, text) {
+  const messages = document.getElementById("chatMessages");
+  if (!messages) {
+    return;
+  }
+
+  const message = document.createElement("article");
+  message.className = `chat-message ${role}`;
+  message.innerHTML = `
+    <div class="chat-message-role">${role === "assistant" ? "Gemini" : "You"}</div>
+    <div class="chat-message-body">${formatChatText(text)}</div>
+  `;
+
+  messages.appendChild(message);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function setChatLoading(isLoading) {
+  const submit = document.getElementById("chatSubmit");
+  const input = document.getElementById("chatInput");
+
+  if (submit) {
+    submit.disabled = isLoading;
+    submit.textContent = isLoading ? "Thinking..." : "Ask";
+  }
+
+  if (input) {
+    input.disabled = isLoading;
+  }
+}
+
+function seedChatWelcome() {
+  if (state.chatSeeded) {
+    return;
+  }
+
+  appendChatMessage(
+    "assistant",
+    [
+      "Ask Gemini about the ISU Football Tournament.",
+      "It can answer questions about teams, players, captains, standings, fixtures, top scorers, and weekly news."
+    ].join("\n")
+  );
+  state.chatSeeded = true;
+}
+
+function setChatOpen(isOpen) {
+  const panel = document.getElementById("chatPanel");
+  const toggle = document.getElementById("chatToggle");
+  const shell = document.getElementById("chatbotShell");
+
+  if (!panel || !toggle || !shell || shell.classList.contains("hidden")) {
+    return;
+  }
+
+  panel.classList.toggle("hidden", !isOpen);
+  toggle.setAttribute("aria-expanded", String(isOpen));
+
+  if (isOpen) {
+    seedChatWelcome();
+    document.getElementById("chatInput")?.focus();
+  }
+}
+
+async function askTournamentAssistant(message) {
+  const question = String(message || "").trim();
+  if (!question) {
+    return;
+  }
+
+  appendChatMessage("user", question);
+  setChatLoading(true);
+
+  try {
+    const response = await postJSON("/api/chat/ask", { message: question });
+    appendChatMessage("assistant", response.answer || "I could not find an answer yet.");
+  } catch (error) {
+    appendChatMessage("assistant", `I could not answer that right now: ${error.message}`);
+  } finally {
+    setChatLoading(false);
+    const input = document.getElementById("chatInput");
+    if (input) {
+      input.value = "";
+      input.focus();
+    }
   }
 }
 
@@ -234,6 +394,85 @@ function renderTable(container, rows, emptyMessage) {
     .join("");
 
   container.innerHTML = `<div class="table-scroll"><div class="table">${header}${body}</div></div>`;
+}
+
+function renderTeamsDeck(container, rows, emptyMessage) {
+  if (!Array.isArray(rows) || !rows.length) {
+    container.innerHTML = `<div class="empty-state">${escapeHtml(emptyMessage)}</div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="team-card-grid">
+      ${rows
+        .map((team) => `
+          <article class="team-card">
+            <div class="team-card-head">
+              <div>
+                <div class="team-card-kicker">Team ${formatCellValue(team.team_number)}</div>
+                <h3>${formatCellValue(team.team_name)}</h3>
+              </div>
+              <span class="team-card-pill">Club</span>
+            </div>
+            <div class="team-card-meta">
+              <span class="team-card-label">Captain</span>
+              <strong>${formatCellValue(team.captain_name || "Not set yet")}</strong>
+            </div>
+          </article>
+        `)
+        .join("")}
+    </div>
+  `;
+}
+
+function renderTeamMembersDeck(container, rows, emptyMessage) {
+  if (!Array.isArray(rows) || !rows.length) {
+    container.innerHTML = `<div class="empty-state">${escapeHtml(emptyMessage)}</div>`;
+    return;
+  }
+
+  const teams = rows.reduce((accumulator, row) => {
+    const key = `${row.team_number}::${row.team_name}`;
+    if (!accumulator.has(key)) {
+      accumulator.set(key, {
+        team_number: row.team_number,
+        team_name: row.team_name,
+        members: []
+      });
+    }
+
+    accumulator.get(key).members.push(row);
+    return accumulator;
+  }, new Map());
+
+  container.innerHTML = `
+    <div class="team-card-grid">
+      ${[...teams.values()]
+        .map((team) => `
+          <article class="team-card team-members-card">
+            <div class="team-card-head">
+              <div>
+                <div class="team-card-kicker">Team ${formatCellValue(team.team_number)}</div>
+                <h3>${formatCellValue(team.team_name)}</h3>
+              </div>
+              <span class="team-card-pill">${escapeHtml(team.members.length)} players</span>
+            </div>
+            <div class="team-player-grid">
+              ${team.members
+                .map((member) => `
+                  <article class="team-player-chip">
+                    <div class="team-player-number">#${formatCellValue(member.player_number)}</div>
+                    <div class="team-player-name">${formatCellValue(member.player_name)}</div>
+                    <div class="team-player-position">${formatCellValue(member.position)}</div>
+                  </article>
+                `)
+                .join("")}
+            </div>
+          </article>
+        `)
+        .join("")}
+    </div>
+  `;
 }
 
 function renderHighlightCards(results) {
@@ -352,9 +591,37 @@ function renderLeagueTableCards(container, rows, emptyMessage) {
   `;
 }
 
+async function loadLeagueSection() {
+  const section = document.getElementById("leagueSection");
+  const metaEl = document.getElementById("leagueMeta");
+  const tableEl = document.getElementById("leaguePreview");
+
+  if (!section || !metaEl || !tableEl) {
+    return;
+  }
+
+  metaEl.innerHTML = `<span class="muted">Loading league table...</span>`;
+  tableEl.innerHTML = `<div class="empty-state">Loading league table...</div>`;
+
+  try {
+    const rows = await getJSON("/api/datasets/league_table");
+    metaEl.innerHTML = `<span class="pill neutral">${rows.length} team${rows.length === 1 ? "" : "s"}</span>`;
+    renderLeagueTableCards(tableEl, rows, "No league table data available yet.");
+  } catch (error) {
+    metaEl.innerHTML = `<span class="muted">Could not load league table.</span>`;
+    tableEl.innerHTML = `<div class="empty-state">Failed to load league table: ${escapeHtml(error.message)}</div>`;
+  }
+}
+
 function setAppVisibility(signedIn) {
   document.getElementById("authScreen").classList.toggle("hidden", signedIn);
   document.getElementById("appShell").classList.toggle("hidden", !signedIn);
+  document.getElementById("chatbotShell")?.classList.toggle("hidden", !signedIn);
+
+  if (!signedIn) {
+    document.getElementById("chatPanel")?.classList.add("hidden");
+    document.getElementById("chatToggle")?.setAttribute("aria-expanded", "false");
+  }
 }
 
 function updateTopbarSession() {
@@ -385,11 +652,13 @@ function applyRoleVisibility() {
   const organizerSection = document.getElementById("organizerSection");
   const datasetSection = document.getElementById("datasetSection");
   const highlightsSection = document.getElementById("highlightsSection");
+  const leagueSection = document.getElementById("leagueSection");
 
   playerSection.classList.toggle("hidden", state.role !== "player");
   organizerSection.classList.toggle("hidden", state.role !== "organizer");
   datasetSection.classList.toggle("hidden", !state.role);
   highlightsSection.classList.toggle("hidden", !state.role);
+  leagueSection.classList.toggle("hidden", !state.role);
 }
 
 function setEntryRole(role, options = {}) {
@@ -575,6 +844,16 @@ async function loadDataset(datasetId = state.activeDatasetId) {
   try {
     const rows = await getJSON(`/api/datasets/${dataset.id}`);
     metaEl.innerHTML = `<span class="pill neutral">${rows.length} row${rows.length === 1 ? "" : "s"}</span>`;
+    if (dataset.id === "teams") {
+      renderTeamsDeck(tableEl, rows, `No ${dataset.label.toLowerCase()} available.`);
+      return;
+    }
+
+    if (dataset.id === "team_members") {
+      renderTeamMembersDeck(tableEl, rows, `No ${dataset.label.toLowerCase()} available.`);
+      return;
+    }
+
     if (dataset.id === "league_table") {
       renderLeagueTableCards(tableEl, rows, `No ${dataset.label.toLowerCase()} available.`);
       return;
@@ -622,7 +901,7 @@ async function loadPlayerPortal() {
 }
 
 async function loadSignedInViews() {
-  const tasks = [loadHealth(), loadDataset(state.activeDatasetId), loadHighlights()];
+  const tasks = [loadHealth(), loadDataset(state.activeDatasetId), loadHighlights(), loadLeagueSection()];
 
   if (state.role === "player") {
     tasks.push(loadPlayerPortal());
@@ -661,6 +940,9 @@ function showLoginScreen(message) {
   updateTopbarSession();
   document.getElementById("playerDashboard").innerHTML = "";
   document.getElementById("playerAuthMessage").textContent = "";
+  document.getElementById("adminTeamForm")?.reset();
+  document.getElementById("adminTeamLookupForm")?.reset();
+  setTeamEditorMode();
   renderOrganizerMessage("");
   setEntryRole(state.entryRole, { message, resetForm: true });
 }
@@ -713,7 +995,7 @@ async function handleOrganizerMutation(config) {
     if (config.clearFormId) {
       clearForm(config.clearFormId);
     }
-    await Promise.all([loadDataset(config.datasetId || state.activeDatasetId), loadHighlights()]);
+    await Promise.all([loadDataset(config.datasetId || state.activeDatasetId), loadHighlights(), loadLeagueSection()]);
     renderOrganizerMessage(response.message || config.successMessage);
   } catch (error) {
     if (error.status === 401) {
@@ -721,6 +1003,25 @@ async function handleOrganizerMutation(config) {
       return;
     }
 
+    renderOrganizerMessage(error.message);
+  }
+}
+
+async function loadTeamForEdit(teamNumber) {
+  renderOrganizerMessage(`Loading team ${teamNumber}...`);
+
+  try {
+    const response = await getJSON(`/api/organizer/teams/${encodeURIComponent(teamNumber)}`);
+    fillTeamForm(response.team);
+    renderOrganizerMessage(`Team ${response.team.team_number} loaded for update.`);
+  } catch (error) {
+    if (error.status === 401) {
+      await logoutCurrentUser("Your organizer session expired. Please log in again.");
+      return;
+    }
+
+    document.getElementById("adminTeamForm")?.reset();
+    setTeamEditorMode();
     renderOrganizerMessage(error.message);
   }
 }
@@ -774,11 +1075,16 @@ document.getElementById("switchUser")?.addEventListener("click", () => {
 document.getElementById("refreshPortal")?.addEventListener("click", () => loadPlayerPortal());
 
 document.getElementById("refreshOrganizer")?.addEventListener("click", async () => {
-  await Promise.all([loadHealth(), loadDataset(state.activeDatasetId), loadHighlights()]);
+  await Promise.all([loadHealth(), loadDataset(state.activeDatasetId), loadHighlights(), loadLeagueSection()]);
   renderOrganizerMessage("Organizer panel refreshed.");
 });
 
 document.getElementById("reloadDataset")?.addEventListener("click", () => loadDataset());
+
+document.getElementById("openLeagueDataset")?.addEventListener("click", () => {
+  loadDataset("league_table");
+  document.getElementById("datasetSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
+});
 
 document.getElementById("datasetNav")?.addEventListener("click", (event) => {
   const button = event.target.closest("[data-dataset]");
@@ -808,17 +1114,42 @@ document.getElementById("organizerPanel")?.addEventListener("click", (event) => 
   clearForm(button.dataset.clearForm);
 });
 
+document.getElementById("adminTeamLookupForm")?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  await loadTeamForEdit(readInputValue("loadTeamNumberInput"));
+});
+
 document.getElementById("adminTeamForm")?.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   await handleOrganizerMutation({
-    pendingMessage: "Saving team...",
-    successMessage: "Team saved successfully.",
+    pendingMessage: "Adding team...",
+    successMessage: "Team added successfully.",
     clearFormId: "adminTeamForm",
     datasetId: "teams",
     run: () =>
       postJSON("/api/organizer/teams", {
         team_number: readInputValue("teamNumberInput"),
+        team_name: readInputValue("teamNameInput"),
+        captain_name: readInputValue("captainNameInput")
+      })
+  });
+});
+
+document.getElementById("updateTeamButton")?.addEventListener("click", async () => {
+  const teamNumber = state.loadedTeamNumber || readInputValue("teamUpdateTargetInput");
+  if (!teamNumber) {
+    renderOrganizerMessage("Load an existing team first before updating it.");
+    return;
+  }
+
+  await handleOrganizerMutation({
+    pendingMessage: `Updating team ${teamNumber}...`,
+    successMessage: "Team updated successfully.",
+    clearFormId: "adminTeamForm",
+    datasetId: "teams",
+    run: () =>
+      putJSON(`/api/organizer/teams/${encodeURIComponent(teamNumber)}`, {
         team_name: readInputValue("teamNameInput"),
         captain_name: readInputValue("captainNameInput")
       })
@@ -861,7 +1192,12 @@ document.getElementById("adminPlayerDeleteForm")?.addEventListener("submit", asy
     pendingMessage: "Deleting player...",
     successMessage: "Player deleted successfully.",
     datasetId: "players",
-    run: () => deleteJSON(`/api/organizer/players/${encodeURIComponent(readInputValue("deletePlayerNumberInput"))}`)
+    run: () =>
+      deleteJSON(
+        `/api/organizer/players/${encodeURIComponent(readInputValue("deletePlayerTeamInput"))}/${encodeURIComponent(
+          readInputValue("deletePlayerNumberInput")
+        )}`
+      )
   });
 });
 
@@ -938,6 +1274,7 @@ document.getElementById("adminStatsForm")?.addEventListener("submit", async (eve
     run: () =>
       postJSON("/api/organizer/stats", {
         match_id: readInputValue("statMatchIdInput"),
+        player_team: readInputValue("statPlayerTeamInput"),
         player_number: readInputValue("statPlayerNumberInput"),
         state: readInputValue("statStateInput") || "played",
         goals: readInputValue("statGoalsInput"),
@@ -958,12 +1295,64 @@ document.getElementById("adminStatsDeleteForm")?.addEventListener("submit", asyn
     run: () =>
       deleteJSON(
         `/api/organizer/stats/${encodeURIComponent(readInputValue("deleteStatMatchIdInput"))}/${encodeURIComponent(
-          readInputValue("deleteStatPlayerNumberInput")
-        )}`
+          readInputValue("deleteStatPlayerTeamInput")
+        )}/${encodeURIComponent(readInputValue("deleteStatPlayerNumberInput"))}`
       )
   });
 });
 
+document.getElementById("chatToggle")?.addEventListener("click", () => {
+  const panel = document.getElementById("chatPanel");
+  setChatOpen(panel?.classList.contains("hidden"));
+});
+
+document.getElementById("chatClose")?.addEventListener("click", () => {
+  setChatOpen(false);
+});
+
+document.getElementById("chatSuggestions")?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-question]");
+  if (!button) {
+    return;
+  }
+
+  setChatOpen(true);
+  askTournamentAssistant(button.dataset.question);
+});
+
+document.getElementById("chatForm")?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const input = document.getElementById("chatInput");
+  await askTournamentAssistant(input?.value || "");
+});
+
+const authScreen = document.getElementById("authScreen");
+if (authScreen) {
+  const resetAuthMotion = () => {
+    authScreen.style.setProperty("--auth-mouse-x", "50%");
+    authScreen.style.setProperty("--auth-mouse-y", "50%");
+    authScreen.style.setProperty("--auth-shift-x", "0");
+    authScreen.style.setProperty("--auth-shift-y", "0");
+  };
+
+  authScreen.addEventListener("pointermove", (event) => {
+    const bounds = authScreen.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width;
+    const y = (event.clientY - bounds.top) / bounds.height;
+    const shiftX = (x - 0.5) * 2;
+    const shiftY = (y - 0.5) * 2;
+
+    authScreen.style.setProperty("--auth-mouse-x", `${(x * 100).toFixed(2)}%`);
+    authScreen.style.setProperty("--auth-mouse-y", `${(y * 100).toFixed(2)}%`);
+    authScreen.style.setProperty("--auth-shift-x", shiftX.toFixed(3));
+    authScreen.style.setProperty("--auth-shift-y", shiftY.toFixed(3));
+  });
+
+  authScreen.addEventListener("pointerleave", resetAuthMotion);
+  resetAuthMotion();
+}
+
 renderDatasetButtons();
 setEntryRole("player");
+setTeamEditorMode();
 detectExistingSession();

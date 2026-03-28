@@ -8,10 +8,17 @@
   </head>
   <body>
     <section id="authScreen" class="auth-screen">
+      <div class="auth-backdrop" aria-hidden="true">
+        <span class="auth-backdrop-grid"></span>
+        <span class="auth-backdrop-orb auth-backdrop-orb-a"></span>
+        <span class="auth-backdrop-orb auth-backdrop-orb-b"></span>
+        <span class="auth-backdrop-orb auth-backdrop-orb-c"></span>
+      </div>
+
       <div class="auth-shell">
         <div class="auth-brand">
           <div class="auth-kicker">ISU Football Tournament</div>
-          <h1>Enter The System</h1>
+          <h2>Enter The System</h2>
           <div class="muted">Choose your role, sign in, and enter the tournament dashboard.</div>
         </div>
 
@@ -23,11 +30,11 @@
         <form id="entryLoginForm" class="entry-form">
           <label class="field">
             <span id="loginUserLabel">Username</span>
-            <input id="entryUsername" class="input" type="text" autocomplete="username" required />
+            <input id="entryUsername" class="input auth-input" type="text" autocomplete="username" required />
           </label>
           <label class="field">
             <span id="loginSecretLabel">Password</span>
-            <input id="entrySecret" class="input" type="password" autocomplete="current-password" required />
+            <input id="entrySecret" class="input auth-input" type="password" autocomplete="current-password" required />
           </label>
           <button class="btn auth-submit" id="entrySubmit" type="submit">Enter System</button>
         </form>
@@ -44,6 +51,7 @@
         </div>
         <div class="topbar-actions">
           <div id="sessionBadge" class="session-badge hidden"></div>
+          <a class="btn ghost" href="/news">News Hub</a>
           <button class="btn" id="switchUser" type="button">Log Out</button>
         </div>
       </header>
@@ -59,6 +67,22 @@
             </div>
           </div>
           <div id="highlightGrid" class="highlights-grid"></div>
+        </section>
+
+        <section class="card wide hidden" id="leagueSection">
+          <div class="card-head">
+            <div>
+              <h2>League Table</h2>
+              <div class="muted">
+                Live standings based on played matches, points, goal difference, and goals scored.
+              </div>
+            </div>
+            <div class="portal-actions">
+              <button class="btn ghost" id="openLeagueDataset" type="button">Open In Data View</button>
+            </div>
+          </div>
+          <div id="leagueMeta" class="row meta-row"></div>
+          <div id="leaguePreview"></div>
         </section>
 
         <section class="card wide hidden" id="playerSection">
@@ -97,8 +121,17 @@
             <div class="admin-grid">
               <section class="portal-panel">
                 <h3>Manage Teams</h3>
-                <div class="muted">Use the same team number to update an existing team.</div>
+                <div class="muted">Add new teams here, or load an old team first if you want to update it.</div>
+                <form id="adminTeamLookupForm" class="delete-form">
+                  <label class="field">
+                    <span>Load Existing Team Number</span>
+                    <input id="loadTeamNumberInput" class="input" type="number" min="0" required />
+                  </label>
+                  <button class="btn ghost" type="submit">Load Team</button>
+                </form>
+                <div id="teamEditorState" class="muted form-note">Create mode. Add a new team here.</div>
                 <form id="adminTeamForm" class="management-form">
+                  <input id="teamUpdateTargetInput" type="hidden" />
                   <label class="field">
                     <span>Team Number</span>
                     <input id="teamNumberInput" class="input" type="number" min="0" required />
@@ -112,7 +145,8 @@
                     <input id="captainNameInput" class="input" type="text" />
                   </label>
                   <div class="form-actions field-full">
-                    <button class="btn" type="submit">Save Team</button>
+                    <button class="btn" type="submit">Add New Team</button>
+                    <button class="btn ghost" id="updateTeamButton" type="button" disabled>Update Loaded Team</button>
                     <button class="btn ghost" type="button" data-clear-form="adminTeamForm">Clear</button>
                   </div>
                 </form>
@@ -127,10 +161,10 @@
 
               <section class="portal-panel">
                 <h3>Manage Players</h3>
-                <div class="muted">Update player name, position, and assigned team from here.</div>
+                <div class="muted">Use the same team number plus jersey number to update an existing player.</div>
                 <form id="adminPlayerForm" class="management-form">
                   <label class="field">
-                    <span>Player Number</span>
+                    <span>Jersey Number</span>
                     <input id="playerNumberAdminInput" class="input" type="number" min="1" required />
                   </label>
                   <label class="field">
@@ -152,7 +186,11 @@
                 </form>
                 <form id="adminPlayerDeleteForm" class="delete-form">
                   <label class="field">
-                    <span>Delete Player Number</span>
+                    <span>Delete Player Team Number</span>
+                    <input id="deletePlayerTeamInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field">
+                    <span>Delete Jersey Number</span>
                     <input id="deletePlayerNumberInput" class="input" type="number" min="1" required />
                   </label>
                   <button class="btn danger" type="submit">Delete Player</button>
@@ -250,14 +288,18 @@
 
               <section class="portal-panel">
                 <h3>Manage Player Stats</h3>
-                <div class="muted">These stat lines feed Top Goals, Top Assists, Yellow Cards, and Red Cards automatically.</div>
+                <div class="muted">Use the team number plus jersey number so stats go to the correct player.</div>
                 <form id="adminStatsForm" class="management-form">
                   <label class="field">
                     <span>Match ID</span>
                     <input id="statMatchIdInput" class="input" type="number" min="1" required />
                   </label>
                   <label class="field">
-                    <span>Player Number</span>
+                    <span>Player Team Number</span>
+                    <input id="statPlayerTeamInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field">
+                    <span>Jersey Number</span>
                     <input id="statPlayerNumberInput" class="input" type="number" min="1" required />
                   </label>
                   <label class="field field-full">
@@ -291,7 +333,11 @@
                     <input id="deleteStatMatchIdInput" class="input" type="number" min="1" required />
                   </label>
                   <label class="field">
-                    <span>Delete Player Number</span>
+                    <span>Delete Player Team Number</span>
+                    <input id="deleteStatPlayerTeamInput" class="input" type="number" min="1" required />
+                  </label>
+                  <label class="field">
+                    <span>Delete Jersey Number</span>
                     <input id="deleteStatPlayerNumberInput" class="input" type="number" min="1" required />
                   </label>
                   <button class="btn danger" type="submit">Delete Stat Line</button>
@@ -316,6 +362,51 @@
           <div id="datasetTable"></div>
         </section>
       </main>
+    </div>
+
+    <div class="chatbot-shell hidden" id="chatbotShell">
+      <div class="chatbot-launcher">
+        <div class="chatbot-bot" aria-hidden="true">
+          <div class="chatbot-bot-antenna"></div>
+          <div class="chatbot-bot-head">
+            <span class="chatbot-bot-eye"></span>
+            <span class="chatbot-bot-eye"></span>
+            <span class="chatbot-bot-mouth"></span>
+          </div>
+          <div class="chatbot-bot-body">
+            <span class="chatbot-bot-core"></span>
+          </div>
+        </div>
+        <button class="chatbot-toggle" id="chatToggle" type="button" aria-expanded="false" aria-controls="chatPanel">
+          Gemini Chat
+        </button>
+      </div>
+
+      <section class="chatbot-panel hidden" id="chatPanel" aria-live="polite">
+        <div class="chatbot-head">
+          <div>
+            <div class="chatbot-kicker">Powered By Gemini</div>
+            <h3>Ask Gemini</h3>
+          </div>
+          <button class="chatbot-close" id="chatClose" type="button" aria-label="Close chat">×</button>
+        </div>
+
+        <div class="chatbot-suggestions" id="chatSuggestions">
+          <button class="chatbot-chip" type="button" data-question="List all teams">List all teams</button>
+          <button class="chatbot-chip" type="button" data-question="Who is the captain of morocco giants?">Captain of morocco giants</button>
+          <button class="chatbot-chip" type="button" data-question="Show the players of Asia FCB">Players of Asia FCB</button>
+          <button class="chatbot-chip" type="button" data-question="Show the league table">League table</button>
+          <button class="chatbot-chip" type="button" data-question="Who are the top scorers?">Top scorers</button>
+        </div>
+
+        <div class="chatbot-messages" id="chatMessages"></div>
+
+        <form class="chatbot-form" id="chatForm">
+          <label class="sr-only" for="chatInput">Ask about the tournament</label>
+          <textarea id="chatInput" class="input chatbot-input" rows="3" placeholder="Ask Gemini about teams, players, fixtures, standings, or news..." required></textarea>
+          <button class="btn" id="chatSubmit" type="submit">Ask</button>
+        </form>
+      </section>
     </div>
 
     <script src="/app.js"></script>
