@@ -1,3 +1,27 @@
+function isLocalServerHost() {
+  return ["localhost", "127.0.0.1"].includes(window.location.hostname);
+}
+
+function getConnectionErrorMessage() {
+  if (!navigator.onLine) {
+    return "Cannot reach the server. Check your internet connection and try again.";
+  }
+
+  if (isLocalServerHost()) {
+    return "Cannot reach the local server. Start the project with .\\run.cmd, then refresh the page and try again.";
+  }
+
+  return "Cannot reach the server. Check your internet connection or try again later.";
+}
+
+function getInvalidResponseMessage() {
+  if (isLocalServerHost()) {
+    return "The local server returned an invalid response. Restart it and try again.";
+  }
+
+  return "The server returned an invalid response. Refresh the page or try again later.";
+}
+
 async function requestJSON(url, options = {}) {
   let res;
   try {
@@ -9,7 +33,7 @@ async function requestJSON(url, options = {}) {
       ...options
     });
   } catch (error) {
-    throw new Error("Cannot reach the server. Start the project with .\\run.cmd, then refresh the page and try again.");
+    throw new Error(getConnectionErrorMessage());
   }
 
   const data = await res.json().catch(() => null);
@@ -22,7 +46,7 @@ async function requestJSON(url, options = {}) {
   }
 
   if (data === null) {
-    throw new Error("Server returned an invalid response. Restart the server and try again.");
+    throw new Error(getInvalidResponseMessage());
   }
 
   return data;

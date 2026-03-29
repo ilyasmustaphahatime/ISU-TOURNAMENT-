@@ -51,3 +51,4 @@ for /f "tokens=5" %%P in ('cmd /c netstat -ano ^| findstr ":%APPPORT%" ^| findst
   goto :eof
 )
 exit /b 0
+
