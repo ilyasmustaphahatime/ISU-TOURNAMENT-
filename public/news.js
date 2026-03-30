@@ -125,6 +125,12 @@ const HONOR_CARD_CONFIG = [
     accent: "week"
   },
   {
+    type: "man_of_the_match",
+    label: "Man Of The Match",
+    kind: "player",
+    accent: "match"
+  },
+  {
     type: "best_goalkeeper",
     label: "Best Goalkeeper",
     kind: "player",
@@ -134,13 +140,13 @@ const HONOR_CARD_CONFIG = [
     type: "best_team_of_week",
     label: "Best Team Of The Week",
     kind: "team",
-    accent: "month"
+    accent: "team-week"
   },
   {
     type: "best_team_of_month",
     label: "Best Team Of The Month",
     kind: "team",
-    accent: "team"
+    accent: "team-month"
   }
 ];
 
@@ -187,7 +193,7 @@ function updateSessionBadge() {
 }
 
 function isPlayerHonorType(type) {
-  return type === "best_player_of_week" || type === "best_goalkeeper";
+  return type === "best_player_of_week" || type === "man_of_the_match" || type === "best_goalkeeper";
 }
 
 function renderHonorGrid(rows) {
@@ -246,7 +252,9 @@ function syncHonorFields() {
 
   if (helperText) {
     helperText.textContent = isPlayerAward
-      ? "Player awards use a team number plus a jersey number."
+      ? type === "man_of_the_match"
+        ? "Man of the match uses a team number plus a jersey number."
+        : "Player awards use a team number plus a jersey number."
       : type === "best_team_of_week"
         ? "Best team of the week uses a team number."
         : "Best team of the month uses a team number.";

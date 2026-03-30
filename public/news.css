@@ -97,7 +97,7 @@
 
 .honor-grid{
   display:grid;
-  grid-template-columns:repeat(4, minmax(0, 1fr));
+  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
   gap:16px;
 }
 
@@ -120,9 +120,10 @@
 }
 
 .honor-card.week::before{background:#4ade80}
+.honor-card.match::before{background:#fb923c}
 .honor-card.goalkeeper::before{background:#2dd4bf}
-.honor-card.month::before{background:#7dd3fc}
-.honor-card.team::before{background:#facc15}
+.honor-card.team-week::before{background:#7dd3fc}
+.honor-card.team-month::before{background:#facc15}
 
 .honor-kicker{
   color:var(--muted);

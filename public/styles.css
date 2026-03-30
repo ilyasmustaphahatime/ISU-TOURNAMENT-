@@ -442,6 +442,8 @@ body{
 .highlight-card.goals:hover{border-color:rgba(34,197,94,.4)}
 .highlight-card.assists:hover{border-color:rgba(96,165,250,.42)}
 .highlight-card.clean-sheets:hover{border-color:rgba(45,212,191,.45)}
+.highlight-card.man-of-the-match:hover{border-color:rgba(251,146,60,.45)}
+.highlight-card.best-team:hover{border-color:rgba(192,132,252,.45)}
 .highlight-card.yellow:hover{border-color:rgba(250,204,21,.5)}
 .highlight-card.red:hover{border-color:rgba(248,113,113,.48)}
 
@@ -466,6 +468,8 @@ body{
 .highlight-card.goals .highlight-icon{color:#4ade80;background:rgba(74,222,128,.12)}
 .highlight-card.assists .highlight-icon{color:#7dd3fc;background:rgba(96,165,250,.14)}
 .highlight-card.clean-sheets .highlight-icon{color:#2dd4bf;background:rgba(45,212,191,.12)}
+.highlight-card.man-of-the-match .highlight-icon{color:#fb923c;background:rgba(251,146,60,.14)}
+.highlight-card.best-team .highlight-icon{color:#c084fc;background:rgba(192,132,252,.14)}
 .highlight-card.yellow .highlight-icon{color:#facc15;background:rgba(250,204,21,.12)}
 .highlight-card.red .highlight-icon{color:#f87171;background:rgba(248,113,113,.12)}
 

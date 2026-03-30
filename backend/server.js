@@ -96,6 +96,7 @@ const WeeklyNewsSchema = z.object({
 
 const SpotlightAwardTypeSchema = z.enum([
   "best_player_of_week",
+  "man_of_the_match",
   "best_goalkeeper",
   "best_team_of_week",
   "best_team_of_month"
@@ -215,6 +216,36 @@ const datasetQueries = {
     FROM top_clean_sheets
     WHERE total_clean_sheets > 0
   `,
+  man_of_the_match: `
+    SELECT
+      a.honor_type,
+      a.title,
+      a.description,
+      a.updated_at,
+      p.player_number,
+      p.player_name,
+      p.position,
+      p.player_team AS team_number,
+      t.team_name
+    FROM spotlight_awards a
+    LEFT JOIN players p ON a.player_id = p.player_id
+    LEFT JOIN teams t ON p.player_team = t.team_number
+    WHERE a.honor_type = 'man_of_the_match'
+    LIMIT 1
+  `,
+  best_team_of_week: `
+    SELECT
+      a.honor_type,
+      a.title,
+      a.description,
+      a.updated_at,
+      t.team_number,
+      t.team_name
+    FROM spotlight_awards a
+    LEFT JOIN teams t ON a.team_number = t.team_number
+    WHERE a.honor_type = 'best_team_of_week'
+    LIMIT 1
+  `,
   weekly_news: `
     SELECT
       n.news_id,
@@ -249,7 +280,7 @@ const datasetQueries = {
     LEFT JOIN players p ON a.player_id = p.player_id
     LEFT JOIN teams pt ON p.player_team = pt.team_number
     LEFT JOIN teams tt ON a.team_number = tt.team_number
-    ORDER BY FIELD(a.honor_type, 'best_player_of_week', 'best_goalkeeper', 'best_team_of_week', 'best_team_of_month')
+    ORDER BY FIELD(a.honor_type, 'best_player_of_week', 'man_of_the_match', 'best_goalkeeper', 'best_team_of_week', 'best_team_of_month')
   `
 };
 
@@ -355,7 +386,7 @@ function getOrganizerAccount(username) {
 }
 
 function isPlayerSpotlightAwardType(honorType) {
-  return honorType === "best_player_of_week" || honorType === "best_goalkeeper";
+  return honorType === "best_player_of_week" || honorType === "man_of_the_match" || honorType === "best_goalkeeper";
 }
 
 function isGoalkeeperPosition(position) {
@@ -367,6 +398,8 @@ function getSpotlightTitle(honorType) {
   switch (honorType) {
     case "best_player_of_week":
       return "Best Player Of The Week";
+    case "man_of_the_match":
+      return "Man Of The Match";
     case "best_goalkeeper":
       return "Best Goalkeeper";
     case "best_team_of_week":
@@ -479,7 +512,8 @@ async function answerTournamentQuestion(message) {
       "4. Which team does Hamza play for?",
       "5. Show the league table",
       "6. Who are the top scorers?",
-      "7. Who has the most clean sheets?"
+      "7. Who has the most clean sheets?",
+      "8. Who is the man of the match?"
     ].join("\n");
   }
 
@@ -553,6 +587,16 @@ async function answerTournamentQuestion(message) {
     return `Clean sheet leaders:\n${formatChatList(rows, (entry) => `${entry.player_name} (${entry.team_name}) - ${entry.total_clean_sheets} clean sheets`)}`;
   }
 
+  if (includesAny(lower, ["man of the match", "motm"])) {
+    const rows = await query(datasetQueries.spotlight_awards);
+    const winner = rows.find((entry) => entry.honor_type === "man_of_the_match");
+    if (!winner) {
+      return "The man of the match award has not been published yet.";
+    }
+
+    return `${winner.title}: ${winner.player_name || "No selection yet"}${winner.player_team_name ? ` from ${winner.player_team_name}` : ""}.`;
+  }
+
   if (includesAny(lower, ["best goalkeeper", "goalkeeper award", "top goalkeeper"])) {
     const rows = await query(`${datasetQueries.spotlight_awards} LIMIT 10`);
     const goalkeeper = rows.find((entry) => entry.honor_type === "best_goalkeeper");
@@ -561,6 +605,16 @@ async function answerTournamentQuestion(message) {
     }
 
     return `${goalkeeper.title}: ${goalkeeper.player_name || "No selection yet"}${goalkeeper.player_team_name ? ` from ${goalkeeper.player_team_name}` : ""}.`;
+  }
+
+  if (includesAny(lower, ["best team of the week", "team of the week"])) {
+    const rows = await query(datasetQueries.spotlight_awards);
+    const teamOfWeek = rows.find((entry) => entry.honor_type === "best_team_of_week");
+    if (!teamOfWeek) {
+      return "The best team of the week award has not been published yet.";
+    }
+
+    return `${teamOfWeek.title}: ${teamOfWeek.team_name || "No selection yet"}.`;
   }
 
   if (includesAny(lower, ["league table", "standings", "table", "ranking"])) {
@@ -634,7 +688,7 @@ async function answerTournamentQuestion(message) {
     return `Upcoming tournament fixtures:\n${formatChatList(rows, (entry) => formatFixtureLine(entry))}`;
   }
 
-  if (includesAny(lower, ["player of the week", "team of the week", "team of the month", "spotlight"])) {
+  if (includesAny(lower, ["player of the week", "man of the match", "team of the week", "team of the month", "spotlight"])) {
     const rows = await query(datasetQueries.spotlight_awards);
     if (!rows.length) {
       return "No spotlight awards have been published yet.";
@@ -672,7 +726,7 @@ async function answerTournamentQuestion(message) {
     return `${player.player_name} plays for ${player.team_name} as ${player.position}, jersey #${player.player_number}.`;
   }
 
-  return "I couldn't match that question yet. Try asking about a team, a player, the league table, fixtures, top scorers, or weekly news.";
+  return "I couldn't match that question yet. Try asking about a team, a player, the league table, fixtures, top scorers, awards, or weekly news.";
 }
 
 function formatGeminiRows(title, rows, formatter, emptyText = "None") {
@@ -726,7 +780,7 @@ async function buildGeminiTournamentContext() {
     formatGeminiRows("Players", players, (entry) => `Team ${entry.player_team} ${entry.team_name} | #${entry.player_number} ${entry.player_name} | ${entry.position}`),
     formatGeminiRows("League table", standings, (entry) => `${entry.team_name} | ${entry.Pts} pts | ${entry.W}W-${entry.D}D-${entry.L}L | GD ${entry.GD}`),
     formatGeminiRows("Fixtures", fixtures, (entry) => `${entry.match_date} ${String(entry.match_time || "").slice(0, 5)} | ${entry.home_team_name} vs ${entry.away_team_name} | ${entry.status}${entry.status === "played" ? ` | ${entry.home_goals}-${entry.away_goals}` : ""}`),
-    formatGeminiRows("Top goals", topGoals, (entry) => `${entry.player_name} (${entry.team_name}) - ${entry.total_goals}`),
+    formatGeminiRows("Top scorers", topGoals, (entry) => `${entry.player_name} (${entry.team_name}) - ${entry.total_goals}`),
     formatGeminiRows("Top assists", topAssists, (entry) => `${entry.player_name} (${entry.team_name}) - ${entry.total_assists}`),
     formatGeminiRows("Top clean sheets", topCleanSheets, (entry) => `${entry.player_name} (${entry.team_name}) - ${entry.total_clean_sheets}`),
     formatGeminiRows("Weekly news", weeklyNews, (entry) => `${entry.week_label} | ${entry.headline} | ${entry.published_on}`),

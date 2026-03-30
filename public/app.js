@@ -82,9 +82,11 @@ const DATASETS = [
   { id: "fixtures", label: "Fixtures", description: "Match schedule, referees, scorelines, and status." },
   { id: "stats", label: "Match Stats", description: "Per-match player stat lines used for goals, assists, cards, and clean sheets." },
   { id: "league_table", label: "League Table", description: "Standings with points, wins, draws, and goal difference." },
-  { id: "top_goals", label: "Top Goals", description: "Leading goal scorers across the tournament." },
+  { id: "top_goals", label: "Top Scorers", description: "Leading goal scorers across the tournament." },
   { id: "top_assists", label: "Top Assists", description: "Assist leaders across the tournament." },
   { id: "top_clean_sheets", label: "Clean Sheets", description: "Goalkeepers with the most clean sheets." },
+  { id: "man_of_the_match", label: "Man Of The Match", description: "The current published man of the match selection." },
+  { id: "best_team_of_week", label: "Best Team Of The Week", description: "The current published best team of the week selection." },
   { id: "yellow_cards", label: "Yellow Cards", description: "Players with the most yellow cards." },
   { id: "red_cards", label: "Red Cards", description: "Players with the most red cards." }
 ];
@@ -92,7 +94,8 @@ const DATASETS = [
 const HIGHLIGHT_CARDS = [
   {
     id: "top_goals",
-    title: "Top Goals",
+    kind: "stat",
+    title: "Top Scorers",
     metric: "Goals",
     valueKey: "total_goals",
     iconClass: "goals",
@@ -104,6 +107,7 @@ const HIGHLIGHT_CARDS = [
   },
   {
     id: "top_assists",
+    kind: "stat",
     title: "Top Assists",
     metric: "Assists",
     valueKey: "total_assists",
@@ -115,19 +119,8 @@ const HIGHLIGHT_CARDS = [
     `
   },
   {
-    id: "yellow_cards",
-    title: "Yellow Cards",
-    metric: "Cards",
-    valueKey: "total_yellow_cards",
-    iconClass: "yellow",
-    icon: `
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="7" y="3" width="10" height="18" rx="2" ry="2"/>
-      </svg>
-    `
-  },
-  {
     id: "top_clean_sheets",
+    kind: "stat",
     title: "Clean Sheets",
     metric: "Clean Sheets",
     valueKey: "total_clean_sheets",
@@ -139,14 +132,26 @@ const HIGHLIGHT_CARDS = [
     `
   },
   {
-    id: "red_cards",
-    title: "Red Cards",
-    metric: "Cards",
-    valueKey: "total_red_cards",
-    iconClass: "red",
+    id: "man_of_the_match",
+    kind: "player_award",
+    title: "Man Of The Match",
+    iconClass: "man-of-the-match",
+    emptyText: "No man of the match selection has been published yet.",
     icon: `
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="7" y="3" width="10" height="18" rx="2" ry="2"/>
+        <path d="M12 2 4.5 6v5.6c0 4.6 2.9 8.6 7.5 10.4 4.6-1.8 7.5-5.8 7.5-10.4V6L12 2Zm0 2.9 4.7 2.5v4.2c0 3.4-1.9 6.2-4.7 7.6-2.8-1.4-4.7-4.2-4.7-7.6V7.4L12 4.9Zm-1 2.9v2.2H8.8v2H11V15h2v-3.1h2.2v-2H13V7.8h-2Z"/>
+      </svg>
+    `
+  },
+  {
+    id: "best_team_of_week",
+    kind: "team_award",
+    title: "Best Team Of The Week",
+    iconClass: "best-team",
+    emptyText: "No best team of the week selection has been published yet.",
+    icon: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2 2.8 6.5 4.2 9l2.1-1v7.9h11.4V8L19.8 9l1.4-2.5L12 2Zm-3.7 16h7.4v2H8.3v-2Zm2-8h1.9v4h-1.9v-4Zm3.5 0h1.9v4h-1.9v-4Zm-7 0h1.9v4H6.8v-4Z"/>
       </svg>
     `
   }
@@ -513,7 +518,7 @@ function renderTeamMembersDeck(container, rows, emptyMessage) {
   `;
 }
 
-function renderHighlightCards(results) {
+function renderHighlightCardsLegacy(results) {
   const container = document.getElementById("highlightGrid");
   if (!container) {
     return;
@@ -529,6 +534,65 @@ function renderHighlightCards(results) {
       ? `${topRow.team_name} • ${card.metric}: ${value}`
       : `No ${card.title.toLowerCase()} data yet.`;
     const badge = payload?.error ? "Unavailable" : hasRealStats ? `${payload?.rows?.length || 0} rows` : "Waiting for stats";
+
+    return `
+      <button class="highlight-card ${card.iconClass}" type="button" data-highlight="${card.id}">
+        <div class="highlight-icon">${card.icon}</div>
+        <div class="highlight-copy">
+          <div class="highlight-topline">${escapeHtml(card.title)}</div>
+          <div class="highlight-name">${escapeHtml(primary)}</div>
+          <div class="highlight-meta">${escapeHtml(secondary)}</div>
+        </div>
+        <div class="highlight-badge">${escapeHtml(badge)}</div>
+      </button>
+    `;
+  }).join("");
+}
+
+function renderHighlightCards(results) {
+  const container = document.getElementById("highlightGrid");
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = HIGHLIGHT_CARDS.map((card) => {
+    const payload = results[card.id];
+    const topRow = payload?.rows?.[0];
+    let primary = "No data yet";
+    let secondary = card.emptyText || `No ${card.title.toLowerCase()} data yet.`;
+    let badge = "Waiting for updates";
+
+    if (payload?.error) {
+      primary = "Unavailable";
+      secondary = payload.error;
+      badge = "Retry later";
+    } else if (card.kind === "stat") {
+      const value = topRow ? Number(topRow[card.valueKey] ?? 0) : 0;
+      const hasRealStats = Boolean(topRow) && value > 0;
+
+      primary = hasRealStats ? topRow.player_name : "No data yet";
+      secondary = hasRealStats
+        ? `${topRow.team_name} - ${card.metric}: ${value}`
+        : `No ${card.title.toLowerCase()} data yet.`;
+      badge = hasRealStats ? `${payload?.rows?.length || 0} rows` : "Waiting for stats";
+    } else if (card.kind === "player_award") {
+      const hasSelection = Boolean(topRow?.player_name);
+      const metaParts = [topRow?.position, topRow?.team_name].filter(Boolean);
+
+      primary = hasSelection ? topRow.player_name : "No selection yet";
+      secondary = hasSelection
+        ? topRow.description || metaParts.join(" - ") || "Official spotlight selection."
+        : card.emptyText;
+      badge = hasSelection ? (topRow.title || "Spotlight live") : "Waiting for organizer";
+    } else if (card.kind === "team_award") {
+      const hasSelection = Boolean(topRow?.team_name);
+
+      primary = hasSelection ? topRow.team_name : "No selection yet";
+      secondary = hasSelection
+        ? topRow.description || `Team ${topRow.team_number} is currently leading this weekly spotlight.`
+        : card.emptyText;
+      badge = hasSelection ? (topRow.title || "Spotlight live") : "Waiting for organizer";
+    }
 
     return `
       <button class="highlight-card ${card.iconClass}" type="button" data-highlight="${card.id}">
