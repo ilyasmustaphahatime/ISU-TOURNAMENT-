@@ -80,10 +80,11 @@ const DATASETS = [
   { id: "team_members", label: "Team Members", description: "Team-by-team member list with positions." },
   { id: "team_of_season", label: "Team Of Season", description: "Current team of the season selections." },
   { id: "fixtures", label: "Fixtures", description: "Match schedule, referees, scorelines, and status." },
-  { id: "stats", label: "Match Stats", description: "Per-match player stat lines used for goals, assists, and cards." },
+  { id: "stats", label: "Match Stats", description: "Per-match player stat lines used for goals, assists, cards, and clean sheets." },
   { id: "league_table", label: "League Table", description: "Standings with points, wins, draws, and goal difference." },
   { id: "top_goals", label: "Top Goals", description: "Leading goal scorers across the tournament." },
   { id: "top_assists", label: "Top Assists", description: "Assist leaders across the tournament." },
+  { id: "top_clean_sheets", label: "Clean Sheets", description: "Goalkeepers with the most clean sheets." },
   { id: "yellow_cards", label: "Yellow Cards", description: "Players with the most yellow cards." },
   { id: "red_cards", label: "Red Cards", description: "Players with the most red cards." }
 ];
@@ -122,6 +123,18 @@ const HIGHLIGHT_CARDS = [
     icon: `
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <rect x="7" y="3" width="10" height="18" rx="2" ry="2"/>
+      </svg>
+    `
+  },
+  {
+    id: "top_clean_sheets",
+    title: "Clean Sheets",
+    metric: "Clean Sheets",
+    valueKey: "total_clean_sheets",
+    iconClass: "clean-sheets",
+    icon: `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2 5 5v6c0 4.6 2.8 8.9 7 11 4.2-2.1 7-6.4 7-11V5l-7-3Zm0 3.1 4 1.7V11c0 3.2-1.8 6.2-4 7.8-2.2-1.6-4-4.6-4-7.8V6.8l4-1.7Z"/>
       </svg>
     `
   },
@@ -233,6 +246,7 @@ function clearForm(formId) {
     document.getElementById("statAssistsInput").value = "0";
     document.getElementById("statYellowInput").value = "0";
     document.getElementById("statRedInput").value = "0";
+    document.getElementById("statCleanSheetsInput").value = "0";
     return;
   }
 
@@ -339,7 +353,7 @@ function seedChatWelcome() {
     "assistant",
     [
       "Ask Gemini about the ISU Football Tournament.",
-      "It can answer questions about teams, players, captains, standings, fixtures, top scorers, and weekly news."
+      "It can answer questions about teams, players, captains, standings, fixtures, top scorers, clean sheets, and weekly news."
     ].join("\n")
   );
   state.chatSeeded = true;
@@ -1304,7 +1318,8 @@ document.getElementById("adminStatsForm")?.addEventListener("submit", async (eve
         goals: readInputValue("statGoalsInput"),
         assists: readInputValue("statAssistsInput"),
         yellow_cards: readInputValue("statYellowInput"),
-        red_cards: readInputValue("statRedInput")
+        red_cards: readInputValue("statRedInput"),
+        clean_sheets: readInputValue("statCleanSheetsInput")
       })
   });
 });

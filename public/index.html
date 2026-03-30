@@ -62,7 +62,7 @@
             <div>
               <h2>Leaderboard Highlights</h2>
               <div class="muted">
-                Quick access cards for the top goals, assists, yellow cards, and red cards leaders.
+                Quick access cards for top goals, assists, clean sheets, yellow cards, and red cards leaders.
               </div>
             </div>
           </div>
@@ -288,7 +288,7 @@
 
               <section class="portal-panel">
                 <h3>Manage Player Stats</h3>
-                <div class="muted">Use the team number plus jersey number so stats go to the correct player.</div>
+                <div class="muted">Use the team number plus jersey number so stats, cards, and clean sheets go to the correct player.</div>
                 <form id="adminStatsForm" class="management-form">
                   <label class="field">
                     <span>Match ID</span>
@@ -321,6 +321,10 @@
                   <label class="field">
                     <span>Red Cards</span>
                     <input id="statRedInput" class="input" type="number" min="0" value="0" required />
+                  </label>
+                  <label class="field">
+                    <span>Clean Sheets</span>
+                    <input id="statCleanSheetsInput" class="input" type="number" min="0" value="0" required />
                   </label>
                   <div class="form-actions field-full">
                     <button class="btn" type="submit">Save Stat Line</button>

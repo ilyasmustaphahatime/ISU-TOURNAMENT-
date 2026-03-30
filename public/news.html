@@ -27,7 +27,7 @@
             <div class="auth-kicker">Weekly Bulletin</div>
             <h1>Tournament News, Spotlight Awards, And Fresh Storylines</h1>
             <p class="news-hero-text">
-              Follow the latest weekly tournament news, discover the newest player and team honors, and keep up with the moments shaping the ISU Football Tournament.
+              Follow the latest weekly tournament news, discover the newest player, goalkeeper, and team honors, and keep up with the moments shaping the ISU Football Tournament.
             </p>
             <div class="news-hero-actions">
               <a class="btn" href="/">Open Dashboard</a>
@@ -41,7 +41,7 @@
           <div class="section-heading">
             <div>
               <h2>Spotlight Awards</h2>
-              <p class="muted">Current best player of the week, best team of the week, and best team of the month selections.</p>
+              <p class="muted">Current best player of the week, best goalkeeper, best team of the week, and best team of the month selections.</p>
             </div>
           </div>
           <div id="honorGrid" class="honor-grid"></div>
@@ -116,12 +116,13 @@
 
             <section class="portal-panel">
               <h3>Manage Spotlight Awards</h3>
-              <div class="muted" id="honorHelperText">Best player of the week uses a team number plus a jersey number. Team awards use a team number.</div>
+              <div class="muted" id="honorHelperText">Player awards use a team number plus a jersey number. Team awards use a team number.</div>
               <form id="spotlightAwardForm" class="management-form">
                 <label class="field">
                   <span>Award Type</span>
                   <select id="honorTypeInput" class="input" required>
                     <option value="best_player_of_week">Best Player Of The Week</option>
+                    <option value="best_goalkeeper">Best Goalkeeper</option>
                     <option value="best_team_of_week">Best Team Of The Week</option>
                     <option value="best_team_of_month">Best Team Of The Month</option>
                   </select>
@@ -148,6 +149,7 @@
                   <span>Delete Award Type</span>
                   <select id="deleteHonorTypeInput" class="input" required>
                     <option value="best_player_of_week">Best Player Of The Week</option>
+                    <option value="best_goalkeeper">Best Goalkeeper</option>
                     <option value="best_team_of_week">Best Team Of The Week</option>
                     <option value="best_team_of_month">Best Team Of The Month</option>
                   </select>

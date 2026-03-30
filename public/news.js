@@ -121,16 +121,25 @@ const HONOR_CARD_CONFIG = [
   {
     type: "best_player_of_week",
     label: "Best Player Of The Week",
+    kind: "player",
     accent: "week"
+  },
+  {
+    type: "best_goalkeeper",
+    label: "Best Goalkeeper",
+    kind: "player",
+    accent: "goalkeeper"
   },
   {
     type: "best_team_of_week",
     label: "Best Team Of The Week",
+    kind: "team",
     accent: "month"
   },
   {
     type: "best_team_of_month",
     label: "Best Team Of The Month",
+    kind: "team",
     accent: "team"
   }
 ];
@@ -177,6 +186,10 @@ function updateSessionBadge() {
   setPageMessage("Public news view. Log in as an organizer on the dashboard if you need to publish updates.");
 }
 
+function isPlayerHonorType(type) {
+  return type === "best_player_of_week" || type === "best_goalkeeper";
+}
+
 function renderHonorGrid(rows) {
   const grid = document.getElementById("honorGrid");
   const honorsByType = Object.fromEntries(rows.map((row) => [row.honor_type, row]));
@@ -193,7 +206,7 @@ function renderHonorGrid(rows) {
       `;
     }
 
-    const isTeamAward = config.type !== "best_player_of_week";
+    const isTeamAward = config.kind === "team";
     const primaryName = isTeamAward ? honor.team_name : honor.player_name;
     const secondary = isTeamAward
       ? honor.description || "Current standout team selection."
@@ -216,7 +229,7 @@ function syncHonorFields() {
   const playerInput = document.getElementById("honorPlayerInput");
   const teamInput = document.getElementById("honorTeamInput");
   const helperText = document.getElementById("honorHelperText");
-  const isPlayerAward = type === "best_player_of_week";
+  const isPlayerAward = isPlayerHonorType(type);
 
   if (playerInput) {
     playerInput.disabled = !isPlayerAward;
@@ -233,7 +246,7 @@ function syncHonorFields() {
 
   if (helperText) {
     helperText.textContent = isPlayerAward
-      ? "Best player of the week uses a team number plus a jersey number."
+      ? "Player awards use a team number plus a jersey number."
       : type === "best_team_of_week"
         ? "Best team of the week uses a team number."
         : "Best team of the month uses a team number.";

@@ -120,6 +120,7 @@ CREATE TABLE IF NOT EXISTS stats (
     assists INT DEFAULT 0,
     yellow_cards INT DEFAULT 0,
     red_cards INT DEFAULT 0,
+    clean_sheets INT DEFAULT 0,
 
     CONSTRAINT fk_stats_match
         FOREIGN KEY (match_id)
@@ -135,6 +136,23 @@ CREATE TABLE IF NOT EXISTS stats (
 
     CONSTRAINT uq_match_player UNIQUE (match_id, player_id)
 );
+
+-- Add clean_sheets to existing hosted/local databases without resetting data
+SET @stats_has_clean_sheets := (
+    SELECT COUNT(*)
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'stats'
+      AND COLUMN_NAME = 'clean_sheets'
+);
+SET @stats_add_clean_sheets_sql := IF(
+    @stats_has_clean_sheets = 0,
+    'ALTER TABLE stats ADD COLUMN clean_sheets INT DEFAULT 0 AFTER red_cards',
+    'SELECT 1'
+);
+PREPARE stats_add_clean_sheets_stmt FROM @stats_add_clean_sheets_sql;
+EXECUTE stats_add_clean_sheets_stmt;
+DEALLOCATE PREPARE stats_add_clean_sheets_stmt;
 
 -- =========================
 -- weekly_news
@@ -331,6 +349,25 @@ LEFT JOIN stats s ON p.player_id = s.player_id
 GROUP BY p.player_id, p.player_number, p.player_name, p.position, t.team_name
 HAVING COALESCE(SUM(s.red_cards), 0) > 0
 ORDER BY total_red_cards DESC, p.player_name ASC;
+
+-- =========================
+-- top_clean_sheets
+-- =========================
+DROP VIEW IF EXISTS top_clean_sheets;
+CREATE VIEW top_clean_sheets AS
+SELECT
+    p.player_number,
+    p.player_name,
+    p.position,
+    t.team_name,
+    COALESCE(SUM(s.clean_sheets), 0) AS total_clean_sheets
+FROM players p
+JOIN teams t ON p.player_team = t.team_number
+LEFT JOIN stats s ON p.player_id = s.player_id
+WHERE LOWER(p.position) LIKE '%keeper%' OR LOWER(p.position) = 'gk'
+GROUP BY p.player_id, p.player_number, p.player_name, p.position, t.team_name
+HAVING COALESCE(SUM(s.clean_sheets), 0) > 0
+ORDER BY total_clean_sheets DESC, p.player_name ASC;
 
 -- =========================
 -- team_members_view
