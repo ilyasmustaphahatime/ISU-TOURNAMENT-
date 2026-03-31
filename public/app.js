@@ -729,6 +729,9 @@ function setAppVisibility(signedIn) {
 function updateTopbarSession() {
   const badge = document.getElementById("sessionBadge");
   const subtitle = document.getElementById("dashboardSubtitle");
+  const organizerGuideLink = document.getElementById("organizerGuideLink");
+
+  organizerGuideLink?.classList.toggle("hidden", state.role !== "organizer");
 
   if (state.role === "player" && state.player) {
     badge.textContent = `Player | ${state.player.player_name}`;

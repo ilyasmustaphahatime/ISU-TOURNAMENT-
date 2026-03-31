@@ -151,7 +151,8 @@ const HONOR_CARD_CONFIG = [
 ];
 
 const state = {
-  organizer: null
+  organizer: null,
+  player: null
 };
 
 function setPageMessage(message) {
@@ -177,6 +178,9 @@ function setEditorMessage(message) {
 function updateSessionBadge() {
   const badge = document.getElementById("newsSessionBadge");
   const editorSection = document.getElementById("newsEditorSection");
+  const organizerGuideLink = document.getElementById("newsOrganizerGuideLink");
+
+  organizerGuideLink?.classList.toggle("hidden", Boolean(state.player) && !state.organizer);
 
   if (state.organizer) {
     badge.textContent = `Organizer | ${state.organizer.username}`;
@@ -302,6 +306,13 @@ async function detectOrganizerSession() {
     state.organizer = response.organizer || response.admin;
   } catch (error) {
     state.organizer = null;
+  }
+
+  try {
+    const response = await getJSON("/api/player/me");
+    state.player = response.player || null;
+  } catch (error) {
+    state.player = null;
   }
 
   updateSessionBadge();
