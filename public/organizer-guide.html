@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Organizer Guide | ISU Football Tournament</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/organizer-guide.css" />
+  </head>
+  <body>
+    <div class="guide-shell">
+      <header class="guide-topbar">
+        <div>
+          <div class="auth-kicker">ISU Football Tournament</div>
+          <div class="guide-title">Organizer Guide</div>
+          <p class="guide-subtitle">A clear step-by-step walkthrough for running the tournament dashboard with confidence.</p>
+        </div>
+        <div class="guide-topbar-actions">
+          <a class="btn ghost" href="/">Back To Dashboard</a>
+          <a class="btn" href="/news">Open News Hub</a>
+        </div>
+      </header>
+
+      <main class="guide-main">
+        <section class="guide-hero">
+          <div class="guide-hero-copy">
+            <div class="auth-kicker">Matchday Roadmap</div>
+            <h1>How Organizers Use The Website Day By Day</h1>
+            <p>
+              Think of the website as your tournament control room. You set up teams first, build the fixtures, update the results when games finish,
+              then add the player stats that power the league table, highlights, cards, awards, and news.
+            </p>
+            <div class="guide-hero-actions">
+              <a class="btn" href="#quick-flow">Start With The Quick Flow</a>
+              <a class="btn ghost" href="#fixtures-workflow">Jump To Fixtures</a>
+            </div>
+          </div>
+          <aside class="guide-hero-panel">
+            <div class="guide-panel-kicker">Best Working Order</div>
+            <ol class="guide-mini-list">
+              <li>Add teams</li>
+              <li>Add players</li>
+              <li>Create fixtures</li>
+              <li>Update results</li>
+              <li>Enter player stats</li>
+              <li>Publish awards and news</li>
+            </ol>
+          </aside>
+        </section>
+
+        <section class="guide-section" id="quick-flow">
+          <div class="section-heading">
+            <div>
+              <h2>Quick Flow</h2>
+              <p class="muted">If you only remember one thing, follow this order every time.</p>
+            </div>
+          </div>
+          <div class="guide-steps-grid">
+            <article class="guide-step-card">
+              <div class="guide-step-number">1</div>
+              <h3>Create The Teams</h3>
+              <p>In <strong>Manage Teams</strong>, add the team number, team name, and captain name. If a team already exists, load it first, then update it.</p>
+            </article>
+            <article class="guide-step-card">
+              <div class="guide-step-number">2</div>
+              <h3>Add The Players</h3>
+              <p>In <strong>Manage Players</strong>, use the team number and jersey number together. That pair is what tells the system which player you are saving.</p>
+            </article>
+            <article class="guide-step-card">
+              <div class="guide-step-number">3</div>
+              <h3>Build The Fixtures</h3>
+              <p>In <strong>Manage Matches</strong>, create every match with a unique match ID, set the date and time, and mark it as <strong>scheduled</strong>.</p>
+            </article>
+            <article class="guide-step-card">
+              <div class="guide-step-number">4</div>
+              <h3>Save The Result</h3>
+              <p>When the match ends, save the same match ID again, change the status to <strong>played</strong>, and enter the final score.</p>
+            </article>
+            <article class="guide-step-card">
+              <div class="guide-step-number">5</div>
+              <h3>Add Player Stats</h3>
+              <p>In <strong>Manage Player Stats</strong>, add goals, assists, cards, and clean sheets. These numbers feed the leaderboards and highlights.</p>
+            </article>
+            <article class="guide-step-card">
+              <div class="guide-step-number">6</div>
+              <h3>Publish The Story</h3>
+              <p>Open <strong>News Hub</strong> to publish weekly news, set spotlight awards, and keep the public side of the tournament fresh.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="guide-section">
+          <div class="section-heading">
+            <div>
+              <h2>Before You Start</h2>
+              <p class="muted">A small checklist that prevents most organizer mistakes.</p>
+            </div>
+          </div>
+          <div class="guide-checklist">
+            <article class="guide-check-item">
+              <h3>Make sure the team numbers are correct</h3>
+              <p>Everything connects through team numbers. If the team number is wrong, the players, fixtures, and stats will point to the wrong club.</p>
+            </article>
+            <article class="guide-check-item">
+              <h3>Make sure the jersey number is correct</h3>
+              <p>Player stats are saved using <strong>team number + jersey number</strong>. A wrong jersey number means the stats can land on the wrong player.</p>
+            </article>
+            <article class="guide-check-item">
+              <h3>Create the match before adding stats</h3>
+              <p>The stats form needs a real match ID. If the match does not exist yet, the stat line cannot be connected properly.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="guide-section">
+          <div class="section-heading">
+            <div>
+              <h2>Using Manage Teams</h2>
+              <p class="muted">This section is for clubs and captain information only.</p>
+            </div>
+          </div>
+          <div class="guide-columns">
+            <article class="guide-panel">
+              <h3>Add A New Team</h3>
+              <ol class="guide-list">
+                <li>Open <strong>Manage Teams</strong>.</li>
+                <li>Enter <strong>Team Number</strong>.</li>
+                <li>Enter <strong>Team Name</strong>.</li>
+                <li>Enter <strong>Captain Name</strong>.</li>
+                <li>Click <strong>Add New Team</strong>.</li>
+              </ol>
+            </article>
+            <article class="guide-panel">
+              <h3>Update An Old Team</h3>
+              <ol class="guide-list">
+                <li>Enter the number in <strong>Load Existing Team Number</strong>.</li>
+                <li>Click <strong>Load Team</strong>.</li>
+                <li>Edit the team name or captain name.</li>
+                <li>Click <strong>Update Loaded Team</strong>.</li>
+              </ol>
+            </article>
+            <article class="guide-panel">
+              <h3>Delete A Team</h3>
+              <ol class="guide-list">
+                <li>Enter the number in <strong>Delete Team Number</strong>.</li>
+                <li>Click <strong>Delete Team</strong>.</li>
+                <li>Use this carefully, because players and related data depend on teams.</li>
+              </ol>
+            </article>
+          </div>
+        </section>
+
+        <section class="guide-section">
+          <div class="section-heading">
+            <div>
+              <h2>Using Manage Players</h2>
+              <p class="muted">This is where organizers build each team roster.</p>
+            </div>
+          </div>
+          <div class="guide-columns">
+            <article class="guide-panel">
+              <h3>Add Or Update A Player</h3>
+              <ol class="guide-list">
+                <li>Enter the <strong>Jersey Number</strong>.</li>
+                <li>Enter the <strong>Player Name</strong>.</li>
+                <li>Enter the <strong>Position</strong>.</li>
+                <li>Enter the <strong>Player Team Number</strong>.</li>
+                <li>Click <strong>Save Player</strong>.</li>
+              </ol>
+              <p class="guide-note">If the same team number and jersey number already exist, the system updates that player instead of creating a second one.</p>
+            </article>
+            <article class="guide-panel">
+              <h3>Delete A Player</h3>
+              <ol class="guide-list">
+                <li>Enter the <strong>Delete Player Team Number</strong>.</li>
+                <li>Enter the <strong>Delete Jersey Number</strong>.</li>
+                <li>Click <strong>Delete Player</strong>.</li>
+              </ol>
+            </article>
+          </div>
+        </section>
+
+        <section class="guide-section" id="fixtures-workflow">
+          <div class="section-heading">
+            <div>
+              <h2>Fixtures And Match Workflow</h2>
+              <p class="muted">This is the most important organizer flow, because the fixtures and final scores drive the whole tournament table.</p>
+            </div>
+          </div>
+
+          <div class="guide-timeline">
+            <article class="guide-timeline-card">
+              <div class="guide-timeline-label">Before The Match</div>
+              <h3>Create The Fixture</h3>
+              <p>Go to <strong>Manage Matches</strong> and enter:</p>
+              <ul class="guide-bullets">
+                <li><strong>Match ID</strong>: a unique number for that game</li>
+                <li><strong>Status</strong>: set it to <strong>scheduled</strong></li>
+                <li><strong>Match Date</strong> and <strong>Match Time</strong></li>
+                <li><strong>Home Team Number</strong> and <strong>Away Team Number</strong></li>
+                <li><strong>Referee ID</strong> if you use referees</li>
+                <li>Leave goals as <strong>0</strong> if the game has not started yet</li>
+              </ul>
+              <p>Then click <strong>Save Match</strong>.</p>
+            </article>
+
+            <article class="guide-timeline-card">
+              <div class="guide-timeline-label">When The Match Ends</div>
+              <h3>Update The Result</h3>
+              <p>Use the same <strong>Match ID</strong> again and update the existing fixture:</p>
+              <ul class="guide-bullets">
+                <li>Change <strong>Status</strong> to <strong>played</strong></li>
+                <li>Enter the final <strong>Home Goals</strong></li>
+                <li>Enter the final <strong>Away Goals</strong></li>
+              </ul>
+              <p>Click <strong>Save Match</strong> again. This is what updates the <strong>League Table</strong>.</p>
+            </article>
+
+            <article class="guide-timeline-card">
+              <div class="guide-timeline-label">If Plans Change</div>
+              <h3>Postpone Or Cancel</h3>
+              <p>If the game does not happen on time, use the same match and change the status to:</p>
+              <ul class="guide-bullets">
+                <li><strong>postponed</strong> if it will happen later</li>
+                <li><strong>cancelled</strong> if it is removed completely</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="guide-section">
+          <div class="section-heading">
+            <div>
+              <h2>Using Manage Player Stats</h2>
+              <p class="muted">This section powers the leaderboard highlights and player records.</p>
+            </div>
+          </div>
+          <div class="guide-columns">
+            <article class="guide-panel">
+              <h3>What To Enter</h3>
+              <ul class="guide-bullets">
+                <li><strong>Match ID</strong></li>
+                <li><strong>Player Team Number</strong></li>
+                <li><strong>Jersey Number</strong></li>
+                <li><strong>State</strong> (usually <strong>played</strong>)</li>
+                <li><strong>Goals</strong></li>
+                <li><strong>Assists</strong></li>
+                <li><strong>Yellow Cards</strong></li>
+                <li><strong>Red Cards</strong></li>
+                <li><strong>Clean Sheets</strong></li>
+              </ul>
+            </article>
+            <article class="guide-panel">
+              <h3>What Changes Automatically</h3>
+              <ul class="guide-bullets">
+                <li><strong>Top Scorers</strong> changes when you add goals</li>
+                <li><strong>Top Assists</strong> changes when you add assists</li>
+                <li><strong>Clean Sheets</strong> changes when you add clean sheets</li>
+                <li><strong>Yellow Cards</strong> and <strong>Red Cards</strong> change from the card counts</li>
+                <li><strong>Leaderboard Highlights</strong> reads from this live data</li>
+              </ul>
+            </article>
+            <article class="guide-panel">
+              <h3>Delete A Wrong Stat Line</h3>
+              <ol class="guide-list">
+                <li>Enter the <strong>Delete Match ID</strong>.</li>
+                <li>Enter the <strong>Delete Player Team Number</strong>.</li>
+                <li>Enter the <strong>Delete Jersey Number</strong>.</li>
+                <li>Click <strong>Delete Stat Line</strong>.</li>
+              </ol>
+            </article>
+          </div>
+        </section>
+
+        <section class="guide-section">
+          <div class="section-heading">
+            <div>
+              <h2>News Hub And Awards</h2>
+              <p class="muted">Use this part when you want the website to feel active, official, and public-facing.</p>
+            </div>
+          </div>
+          <div class="guide-columns">
+            <article class="guide-panel">
+              <h3>Weekly News</h3>
+              <p>Open <strong>News Hub</strong> and use <strong>Publish Weekly News</strong> to write a human summary of what happened during the week.</p>
+              <p>You can leave <strong>News ID</strong> empty to create a new post, or reuse an old ID to update an existing story.</p>
+            </article>
+            <article class="guide-panel">
+              <h3>Spotlight Awards</h3>
+              <p>Use <strong>Manage Spotlight Awards</strong> to set things like:</p>
+              <ul class="guide-bullets">
+                <li>Best Player Of The Week</li>
+                <li>Man Of The Match</li>
+                <li>Best Goalkeeper</li>
+                <li>Best Team Of The Week</li>
+                <li>Best Team Of The Month</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="guide-section">
+          <div class="section-heading">
+            <div>
+              <h2>Common Mistakes To Avoid</h2>
+              <p class="muted">These are the mistakes that usually make organizers think the website is wrong, when it is really a data order issue.</p>
+            </div>
+          </div>
+          <div class="guide-checklist">
+            <article class="guide-check-item">
+              <h3>Adding stats before the match exists</h3>
+              <p>Create the match first in <strong>Manage Matches</strong>, then add player stats.</p>
+            </article>
+            <article class="guide-check-item">
+              <h3>Using the wrong team number</h3>
+              <p>The system uses team numbers everywhere. Always confirm the team number before saving players, fixtures, or awards.</p>
+            </article>
+            <article class="guide-check-item">
+              <h3>Using the wrong jersey number</h3>
+              <p>Stats and player updates depend on the exact jersey number inside the correct team.</p>
+            </article>
+            <article class="guide-check-item">
+              <h3>Creating duplicate matches</h3>
+              <p>If you want to update a fixture, reuse the same <strong>Match ID</strong>. Do not create a second match for the same game unless you really mean to.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="guide-section">
+          <div class="section-heading">
+            <div>
+              <h2>A Practical Matchday Routine</h2>
+              <p class="muted">If several organizers use the system, this routine keeps the dashboard clean.</p>
+            </div>
+          </div>
+          <div class="guide-routine">
+            <article class="guide-routine-card">
+              <div class="guide-routine-time">Before Kickoff</div>
+              <p>Check the teams, player rosters, and fixture times. Make sure the match exists and is marked as <strong>scheduled</strong>.</p>
+            </article>
+            <article class="guide-routine-card">
+              <div class="guide-routine-time">After Full Time</div>
+              <p>Update the same match to <strong>played</strong>, save the final score, then add the player stats while the game is still fresh in your mind.</p>
+            </article>
+            <article class="guide-routine-card">
+              <div class="guide-routine-time">End Of The Day</div>
+              <p>Refresh the dashboard, check the highlights, publish the news if needed, and set the spotlight awards so the public page looks complete.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
