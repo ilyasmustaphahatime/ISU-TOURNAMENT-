@@ -4,7 +4,6 @@ services:
     plan: free
     runtime: node
     buildCommand: npm ci
-    preDeployCommand: npm run setup-db
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
