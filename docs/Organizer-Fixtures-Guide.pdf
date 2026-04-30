@@ -1,0 +1,471 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 3 /Kids [4 0 R 6 0 R 8 0 R] >>
+endobj
+3 0 obj
+<< /Length 3147 >>
+stream
+BT
+/F1 26 Tf
+0.90 0.93 0.97 rg
+1 0 0 1 54 752 Tm
+(Organizer Fixtures Guide) Tj
+ET
+BT
+/F1 12.5 Tf
+0.82 0.86 0.91 rg
+1 0 0 1 54 719 Tm
+(This guide explains, in a simple human way, how organizers should use the Manage Matches) Tj
+ET
+BT
+/F1 12.5 Tf
+0.82 0.86 0.91 rg
+1 0 0 1 54 699.5 Tm
+(dashboard to create fixtures, update final scores, postpone games, cancel matches, and keep) Tj
+ET
+BT
+/F1 12.5 Tf
+0.82 0.86 0.91 rg
+1 0 0 1 54 680 Tm
+(the tournament website accurate.) Tj
+ET
+BT
+/F1 12.5 Tf
+0.82 0.86 0.91 rg
+1 0 0 1 54 656.5 Tm
+(Core idea: create a fixture once, then update the same match later by using the same Match ID.) Tj
+ET
+BT
+/F1 18 Tf
+0.62 0.83 1.00 rg
+1 0 0 1 54 623 Tm
+(What Every Field Means) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 598 Tm
+(- Match ID: a unique number for one match. Reuse it later when updating that same match.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 577 Tm
+(- Status: scheduled before kickoff, played after full time, postponed if delayed,) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 558 Tm
+(cancelled if removed.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 537 Tm
+(- Match Date: the day the game should happen.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 516 Tm
+(- Match Time: the kickoff time.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 495 Tm
+(- Home Team Number: the team number of the home side.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 474 Tm
+(- Away Team Number: the team number of the away side.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 453 Tm
+(- Referee ID: optional if you manage referees in the system.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 432 Tm
+(- Home Goals and Away Goals: keep them at 0 before the game is played, then update them) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 413 Tm
+(with the final result.) Tj
+ET
+BT
+/F1 18 Tf
+0.62 0.83 1.00 rg
+1 0 0 1 54 382 Tm
+(How To Create A New Fixture) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 357 Tm
+(- Open Manage Matches in the Organizer Control Panel.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 336 Tm
+(- Choose a new Match ID that is not already used.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 315 Tm
+(- Set Status to scheduled.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 294 Tm
+(- Enter the Match Date and Match Time.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 273 Tm
+(- Enter the Home Team Number and Away Team Number.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 252 Tm
+(- Leave Home Goals and Away Goals at 0 before kickoff.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 231 Tm
+(- Click Save Match.) Tj
+ET
+BT
+/F1 14 Tf
+0.98 0.87 0.57 rg
+1 0 0 1 54 206 Tm
+(Example) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 185 Tm
+(Example fixture:) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 166.5 Tm
+(Match ID: 1001) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 148 Tm
+(Status: scheduled) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 129.5 Tm
+(Match Date: 2026-04-02) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 111 Tm
+(Match Time: 18:00) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 92.5 Tm
+(Home Team Number: 3) Tj
+ET
+endstream
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 3 0 R >>
+endobj
+5 0 obj
+<< /Length 3061 >>
+stream
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 752 Tm
+(Away Team Number: 5) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 733.5 Tm
+(Home Goals: 0) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 715 Tm
+(Away Goals: 0) Tj
+ET
+BT
+/F1 18 Tf
+0.62 0.83 1.00 rg
+1 0 0 1 54 686.5 Tm
+(How To Update A Played Match) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 661.5 Tm
+(- Use the same Match ID as the original fixture.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 640.5 Tm
+(- Change Status to played.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 619.5 Tm
+(- Enter the final Home Goals.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 598.5 Tm
+(- Enter the final Away Goals.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 577.5 Tm
+(- Click Save Match again.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 556.5 Tm
+(- This updates the fixture and affects the League Table.) Tj
+ET
+BT
+/F1 14 Tf
+0.98 0.87 0.57 rg
+1 0 0 1 54 531.5 Tm
+(Example) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 510.5 Tm
+(Example result update:) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 492 Tm
+(Match ID: 1001) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 473.5 Tm
+(Status: played) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 455 Tm
+(Home Goals: 2) Tj
+ET
+BT
+/F1 11.5 Tf
+0.88 0.91 0.95 rg
+1 0 0 1 54 436.5 Tm
+(Away Goals: 1) Tj
+ET
+BT
+/F1 18 Tf
+0.62 0.83 1.00 rg
+1 0 0 1 54 408 Tm
+(Special Cases) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 383 Tm
+(- Postponed: use the same Match ID and set Status to postponed.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 362 Tm
+(- Cancelled: use the same Match ID and set Status to cancelled.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 341 Tm
+(- Delete Match: if the record itself is wrong, use Delete Match ID and click Delete Match.) Tj
+ET
+BT
+/F1 18 Tf
+0.62 0.83 1.00 rg
+1 0 0 1 54 310 Tm
+(After Saving A Played Match) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 285 Tm
+(- Open Manage Player Stats and add the goals, assists, yellow cards, red cards, and clean) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 266 Tm
+(sheets for the players involved.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 245 Tm
+(- Refresh the dashboard and check Fixtures, League Table, Top Scorers, Top Assists, and) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 226 Tm
+(Clean Sheets.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 205 Tm
+(- If something looks wrong, verify the team number, jersey number, and match ID first.) Tj
+ET
+BT
+/F1 18 Tf
+0.62 0.83 1.00 rg
+1 0 0 1 54 174 Tm
+(Common Mistakes To Avoid) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 149 Tm
+(- Do not create a second match if the fixture already exists. Update the first one) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 130 Tm
+(instead.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 109 Tm
+(- Do not use the wrong team number. A wrong number attaches the fixture to the wrong club.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 88 Tm
+(- Do not forget to change Status to played after full time, otherwise the table will not) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 836 >>
+stream
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 752 Tm
+(update.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 731 Tm
+(- Do not enter player stats before the match exists in Manage Matches.) Tj
+ET
+BT
+/F1 18 Tf
+0.62 0.83 1.00 rg
+1 0 0 1 54 700 Tm
+(Simple Matchday Routine) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 675 Tm
+(- Before kickoff: create the fixture and make sure it is marked as scheduled.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 654 Tm
+(- After full time: update the same match to played, enter the final score, then add player) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 635 Tm
+(stats.) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 614 Tm
+(- End of day: review the dashboard and confirm the highlights and league table match the) Tj
+ET
+BT
+/F1 12 Tf
+0.72 0.76 0.82 rg
+1 0 0 1 54 595 Tm
+(real games.) Tj
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000000148 00000 n 
+0000003346 00000 n 
+0000003472 00000 n 
+0000006584 00000 n 
+0000006710 00000 n 
+0000007596 00000 n 
+0000007722 00000 n 
+trailer
+<< /Size 10 /Root 9 0 R >>
+startxref
+7771
+%%EOF

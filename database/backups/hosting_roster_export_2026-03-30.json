@@ -1,0 +1,694 @@
+{
+  "teams": [
+    {
+      "team_number": 1,
+      "team_name": "REAL BADMAN FC",
+      "captain_name": "ABRAHAM"
+    },
+    {
+      "team_number": 2,
+      "team_name": "Algeria Desert Warriors",
+      "captain_name": "Benzine Ilies"
+    },
+    {
+      "team_number": 3,
+      "team_name": "WEST COAST FC",
+      "captain_name": "马鹤源"
+    },
+    {
+      "team_number": 4,
+      "team_name": "Asia FCB",
+      "captain_name": "Bas"
+    },
+    {
+      "team_number": 5,
+      "team_name": "morocco warriors",
+      "captain_name": "Ilyas Mustapha Hatime"
+    },
+    {
+      "team_number": 6,
+      "team_name": "morocco giants",
+      "captain_name": "Hamza"
+    },
+    {
+      "team_number": 7,
+      "team_name": "morocco falcons",
+      "captain_name": "bassour"
+    },
+    {
+      "team_number": 8,
+      "team_name": "west africa united",
+      "captain_name": "abubakar"
+    }
+  ],
+  "players": [
+    {
+      "player_number": 3,
+      "player_name": "TOUBARO",
+      "position": "Defender",
+      "player_team": 1
+    },
+    {
+      "player_number": 4,
+      "player_name": "MOHAFA",
+      "position": "Defender",
+      "player_team": 1
+    },
+    {
+      "player_number": 5,
+      "player_name": "BISHAR",
+      "position": "Defender",
+      "player_team": 1
+    },
+    {
+      "player_number": 6,
+      "player_name": "MARK",
+      "position": "Defender",
+      "player_team": 1
+    },
+    {
+      "player_number": 9,
+      "player_name": "H.MIAMI",
+      "position": "Goalkeeper",
+      "player_team": 1
+    },
+    {
+      "player_number": 10,
+      "player_name": "ABRAHAM",
+      "position": "Midfielder",
+      "player_team": 1
+    },
+    {
+      "player_number": 11,
+      "player_name": "KAFI",
+      "position": "Defender",
+      "player_team": 1
+    },
+    {
+      "player_number": 14,
+      "player_name": "HASHEEM",
+      "position": "Defender",
+      "player_team": 1
+    },
+    {
+      "player_number": 17,
+      "player_name": "BENJAMIN",
+      "position": "Midfielder",
+      "player_team": 1
+    },
+    {
+      "player_number": 22,
+      "player_name": "MOHAMED M",
+      "position": "Defender",
+      "player_team": 1
+    },
+    {
+      "player_number": 70,
+      "player_name": "APDI KEDER",
+      "position": "Defender",
+      "player_team": 1
+    },
+    {
+      "player_number": 1,
+      "player_name": "Ammar Abderraouf",
+      "position": "Goalkeeper",
+      "player_team": 2
+    },
+    {
+      "player_number": 2,
+      "player_name": "Irnatene Mokrane",
+      "position": "Defender",
+      "player_team": 2
+    },
+    {
+      "player_number": 3,
+      "player_name": "Nadhem Kassabi",
+      "position": "Defender",
+      "player_team": 2
+    },
+    {
+      "player_number": 4,
+      "player_name": "Abbas",
+      "position": "Defender",
+      "player_team": 2
+    },
+    {
+      "player_number": 5,
+      "player_name": "Bahaeddine",
+      "position": "Defender",
+      "player_team": 2
+    },
+    {
+      "player_number": 6,
+      "player_name": "Zerkouk Mohamed Reda",
+      "position": "Midfielder",
+      "player_team": 2
+    },
+    {
+      "player_number": 7,
+      "player_name": "Boudia Rayane",
+      "position": "Defender",
+      "player_team": 2
+    },
+    {
+      "player_number": 8,
+      "player_name": "Hammyani Nadir",
+      "position": "Midfielder",
+      "player_team": 2
+    },
+    {
+      "player_number": 9,
+      "player_name": "Laifa Abdelmoumene",
+      "position": "Defender",
+      "player_team": 2
+    },
+    {
+      "player_number": 10,
+      "player_name": "Benzine Ilies",
+      "position": "Defender",
+      "player_team": 2
+    },
+    {
+      "player_number": 11,
+      "player_name": "Habib",
+      "position": "Defender",
+      "player_team": 2
+    },
+    {
+      "player_number": 2,
+      "player_name": "马鹤源",
+      "position": "cm",
+      "player_team": 3
+    },
+    {
+      "player_number": 4,
+      "player_name": "毕晏昭",
+      "position": "cm",
+      "player_team": 3
+    },
+    {
+      "player_number": 5,
+      "player_name": "Subat",
+      "position": "Defender",
+      "player_team": 3
+    },
+    {
+      "player_number": 6,
+      "player_name": "孙云鹏",
+      "position": "cm",
+      "player_team": 3
+    },
+    {
+      "player_number": 7,
+      "player_name": "穆再排尔",
+      "position": "Defender",
+      "player_team": 3
+    },
+    {
+      "player_number": 8,
+      "player_name": "Angsar",
+      "position": "cm",
+      "player_team": 3
+    },
+    {
+      "player_number": 9,
+      "player_name": "谢建业",
+      "position": "Defender",
+      "player_team": 3
+    },
+    {
+      "player_number": 11,
+      "player_name": "张嘉明",
+      "position": "Defender",
+      "player_team": 3
+    },
+    {
+      "player_number": 14,
+      "player_name": "Ebrayim",
+      "position": "cm",
+      "player_team": 3
+    },
+    {
+      "player_number": 17,
+      "player_name": "Tayir",
+      "position": "cm",
+      "player_team": 3
+    },
+    {
+      "player_number": 19,
+      "player_name": "Ankar",
+      "position": "Defender",
+      "player_team": 3
+    },
+    {
+      "player_number": 25,
+      "player_name": "陈俊池",
+      "position": "gk",
+      "player_team": 3
+    },
+    {
+      "player_number": 81,
+      "player_name": "黄锐",
+      "position": "cm",
+      "player_team": 3
+    },
+    {
+      "player_number": 4,
+      "player_name": "Sohail AK",
+      "position": "Defender",
+      "player_team": 4
+    },
+    {
+      "player_number": 6,
+      "player_name": "Mohammed Ali",
+      "position": "Defender",
+      "player_team": 4
+    },
+    {
+      "player_number": 7,
+      "player_name": "Muzakir",
+      "position": "Defender",
+      "player_team": 4
+    },
+    {
+      "player_number": 8,
+      "player_name": "Waleed",
+      "position": "Midfielder",
+      "player_team": 4
+    },
+    {
+      "player_number": 9,
+      "player_name": "Ahmed",
+      "position": "Defender",
+      "player_team": 4
+    },
+    {
+      "player_number": 10,
+      "player_name": "Bas",
+      "position": "Midfielder",
+      "player_team": 4
+    },
+    {
+      "player_number": 11,
+      "player_name": "Ersultan",
+      "position": "Midfielder",
+      "player_team": 4
+    },
+    {
+      "player_number": 13,
+      "player_name": "Baha",
+      "position": "Midfielder",
+      "player_team": 4
+    },
+    {
+      "player_number": 14,
+      "player_name": "Zico",
+      "position": "Midfielder",
+      "player_team": 4
+    },
+    {
+      "player_number": 17,
+      "player_name": "Izaz Ali",
+      "position": "Goalkeeper",
+      "player_team": 4
+    },
+    {
+      "player_number": 19,
+      "player_name": "Gracelyn",
+      "position": "Defender",
+      "player_team": 4
+    },
+    {
+      "player_number": 22,
+      "player_name": "Mikel",
+      "position": "Goalkeeper",
+      "player_team": 4
+    },
+    {
+      "player_number": 30,
+      "player_name": "Joy",
+      "position": "Defender",
+      "player_team": 4
+    },
+    {
+      "player_number": 41,
+      "player_name": "Musa",
+      "position": "Midfielder",
+      "player_team": 4
+    },
+    {
+      "player_number": 99,
+      "player_name": "Faisal Jr",
+      "position": "Defender",
+      "player_team": 4
+    },
+    {
+      "player_number": 1,
+      "player_name": "Ismail Tabbiz",
+      "position": "Keeper",
+      "player_team": 5
+    },
+    {
+      "player_number": 2,
+      "player_name": "Aymane Sehsah",
+      "position": "Defender",
+      "player_team": 5
+    },
+    {
+      "player_number": 3,
+      "player_name": "Abdelaziz Belghard",
+      "position": "Defender",
+      "player_team": 5
+    },
+    {
+      "player_number": 6,
+      "player_name": "Ilyas Mustapha Hatime",
+      "position": "Midfielder",
+      "player_team": 5
+    },
+    {
+      "player_number": 8,
+      "player_name": "Ouzaidane Anass",
+      "position": "Midfielder",
+      "player_team": 5
+    },
+    {
+      "player_number": 9,
+      "player_name": "Yasser Kria",
+      "position": "Defender",
+      "player_team": 5
+    },
+    {
+      "player_number": 10,
+      "player_name": "Achraf Alhiane",
+      "position": "Defender",
+      "player_team": 5
+    },
+    {
+      "player_number": 16,
+      "player_name": "Louksani Marouane",
+      "position": "Defender",
+      "player_team": 5
+    },
+    {
+      "player_number": 18,
+      "player_name": "Marssou Ali",
+      "position": "Defender",
+      "player_team": 5
+    },
+    {
+      "player_number": 19,
+      "player_name": "Othmane Ait Laachir",
+      "position": "Defender",
+      "player_team": 5
+    },
+    {
+      "player_number": 32,
+      "player_name": "El Mehdi Akhiyad",
+      "position": "Defender",
+      "player_team": 5
+    },
+    {
+      "player_number": 33,
+      "player_name": "Elmahdaoui Saad",
+      "position": "Midfielder",
+      "player_team": 5
+    },
+    {
+      "player_number": 44,
+      "player_name": "Tajji Ayoub",
+      "position": "Defender",
+      "player_team": 5
+    },
+    {
+      "player_number": 99,
+      "player_name": "Adam Eddyani",
+      "position": "Defender",
+      "player_team": 5
+    },
+    {
+      "player_number": 1,
+      "player_name": "Adnane Abousalim",
+      "position": "Goalkeeper",
+      "player_team": 6
+    },
+    {
+      "player_number": 2,
+      "player_name": "JK",
+      "position": "Defender",
+      "player_team": 6
+    },
+    {
+      "player_number": 5,
+      "player_name": "Amine",
+      "position": "Defender",
+      "player_team": 6
+    },
+    {
+      "player_number": 6,
+      "player_name": "Walide",
+      "position": "Defender",
+      "player_team": 6
+    },
+    {
+      "player_number": 7,
+      "player_name": "Mohamed Zerda",
+      "position": "RB",
+      "player_team": 6
+    },
+    {
+      "player_number": 8,
+      "player_name": "Ziad Radi",
+      "position": "Midfielder",
+      "player_team": 6
+    },
+    {
+      "player_number": 10,
+      "player_name": "Hamza",
+      "position": "Defender",
+      "player_team": 6
+    },
+    {
+      "player_number": 11,
+      "player_name": "Aymane",
+      "position": "Defender",
+      "player_team": 6
+    },
+    {
+      "player_number": 12,
+      "player_name": "Abssamad",
+      "position": "Midfielder",
+      "player_team": 6
+    },
+    {
+      "player_number": 15,
+      "player_name": "Alae",
+      "position": "Midfielder",
+      "player_team": 6
+    },
+    {
+      "player_number": 17,
+      "player_name": "Fariss",
+      "position": "Defender",
+      "player_team": 6
+    },
+    {
+      "player_number": 19,
+      "player_name": "El Cherif",
+      "position": "Defender",
+      "player_team": 6
+    },
+    {
+      "player_number": 34,
+      "player_name": "Anwar Oujnine",
+      "position": "Defender",
+      "player_team": 6
+    },
+    {
+      "player_number": 99,
+      "player_name": "Zyad Kartoul",
+      "position": "Defender",
+      "player_team": 6
+    },
+    {
+      "player_number": 1,
+      "player_name": "RED1",
+      "position": "Goalkeeper",
+      "player_team": 7
+    },
+    {
+      "player_number": 2,
+      "player_name": "FH Amine",
+      "position": "Defender",
+      "player_team": 7
+    },
+    {
+      "player_number": 3,
+      "player_name": "Pouvri",
+      "position": "Defender",
+      "player_team": 7
+    },
+    {
+      "player_number": 4,
+      "player_name": "A. Fathi",
+      "position": "Defender",
+      "player_team": 7
+    },
+    {
+      "player_number": 5,
+      "player_name": "Bassour",
+      "position": "Defensive Midfielder",
+      "player_team": 7
+    },
+    {
+      "player_number": 6,
+      "player_name": "N. Elmaleky",
+      "position": "Defender",
+      "player_team": 7
+    },
+    {
+      "player_number": 7,
+      "player_name": "Amiri",
+      "position": "Right Winger",
+      "player_team": 7
+    },
+    {
+      "player_number": 8,
+      "player_name": "Ahmed",
+      "position": "Midfielder",
+      "player_team": 7
+    },
+    {
+      "player_number": 9,
+      "player_name": "M. Elkhalil",
+      "position": "Forward",
+      "player_team": 7
+    },
+    {
+      "player_number": 10,
+      "player_name": "El Baghdady",
+      "position": "Midfielder",
+      "player_team": 7
+    },
+    {
+      "player_number": 11,
+      "player_name": "Oussama",
+      "position": "Midfielder",
+      "player_team": 7
+    },
+    {
+      "player_number": 19,
+      "player_name": "Yahya",
+      "position": "Left Winger",
+      "player_team": 7
+    },
+    {
+      "player_number": 23,
+      "player_name": "Ghazi",
+      "position": "Midfielder",
+      "player_team": 7
+    },
+    {
+      "player_number": 30,
+      "player_name": "Saif",
+      "position": "Attacking Midfielder",
+      "player_team": 7
+    },
+    {
+      "player_number": 35,
+      "player_name": "Abdo",
+      "position": "Defender",
+      "player_team": 7
+    },
+    {
+      "player_number": 1,
+      "player_name": "green",
+      "position": "keeper",
+      "player_team": 8
+    },
+    {
+      "player_number": 2,
+      "player_name": "nanaknawme",
+      "position": "rb",
+      "player_team": 8
+    },
+    {
+      "player_number": 4,
+      "player_name": "kwalee",
+      "position": "lb",
+      "player_team": 8
+    },
+    {
+      "player_number": 5,
+      "player_name": "bryant",
+      "position": "cb",
+      "player_team": 8
+    },
+    {
+      "player_number": 6,
+      "player_name": "aduse",
+      "position": "cb",
+      "player_team": 8
+    },
+    {
+      "player_number": 7,
+      "player_name": "james",
+      "position": "rw",
+      "player_team": 8
+    },
+    {
+      "player_number": 9,
+      "player_name": "brown",
+      "position": "at",
+      "player_team": 8
+    },
+    {
+      "player_number": 10,
+      "player_name": "nema",
+      "position": "rw",
+      "player_team": 8
+    },
+    {
+      "player_number": 11,
+      "player_name": "hydar",
+      "position": "lw",
+      "player_team": 8
+    },
+    {
+      "player_number": 12,
+      "player_name": "fivio",
+      "position": "lb",
+      "player_team": 8
+    },
+    {
+      "player_number": 13,
+      "player_name": "greenfield",
+      "position": "rb",
+      "player_team": 8
+    },
+    {
+      "player_number": 14,
+      "player_name": "muhammad",
+      "position": "lw",
+      "player_team": 8
+    },
+    {
+      "player_number": 15,
+      "player_name": "philip",
+      "position": "mdf",
+      "player_team": 8
+    },
+    {
+      "player_number": 16,
+      "player_name": "nathan",
+      "position": "mdf",
+      "player_team": 8
+    },
+    {
+      "player_number": 18,
+      "player_name": "pavel youmsi",
+      "position": "mdf",
+      "player_team": 8
+    }
+  ]
+}

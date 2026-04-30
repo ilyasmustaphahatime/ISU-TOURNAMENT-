@@ -9,3 +9,5 @@ yarn-error.log*
 server.out.log
 server.err.log
 server.pid
+.tmp-chrome-profile/
+.tmp-edge-profile/

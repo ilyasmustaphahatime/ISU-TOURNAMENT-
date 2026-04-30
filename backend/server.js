@@ -8,6 +8,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const mysql = require("mysql2/promise");
 const { z } = require("zod");
+const { createMysqlPoolConfig, resolveDatabaseConfig } = require("./db");
 
 const candidateEnvPaths = [
   path.resolve(process.cwd(), ".env"),
@@ -425,6 +426,217 @@ function formatFixtureLine(fixture) {
 
 function formatStandingLine(row) {
   return `${row.team_name}: ${row.Pts} pts, ${row.W}W-${row.D}D-${row.L}L, GD ${row.GD}`;
+}
+
+function mergeAutomaticSpotlightAward(honorType, computedEntry, manualAwardsMap) {
+  const manualEntry = manualAwardsMap.get(honorType) || null;
+
+  if (!computedEntry) {
+    return manualEntry;
+  }
+
+  return {
+    ...computedEntry,
+    title: manualEntry?.title || computedEntry.title,
+    description: manualEntry?.description || computedEntry.description,
+    updated_at: manualEntry?.updated_at || computedEntry.updated_at || null
+  };
+}
+
+async function fetchLiveSpotlightAwards() {
+  const manualAwards = await query(datasetQueries.spotlight_awards);
+  const manualAwardsMap = new Map(manualAwards.map((entry) => [entry.honor_type, entry]));
+
+  const [
+    topScorerRows,
+    topGoalkeeperRows,
+    topTeamRows,
+    manOfTheMatchRows
+  ] = await Promise.all([
+    query(`
+      SELECT
+        p.player_id,
+        p.player_number,
+        p.player_name,
+        p.position,
+        p.player_team AS player_team_number,
+        t.team_name AS player_team_name,
+        SUM(s.goals) AS total_goals,
+        SUM(s.assists) AS total_assists
+      FROM stats s
+      JOIN players p ON s.player_id = p.player_id
+      JOIN teams t ON p.player_team = t.team_number
+      GROUP BY p.player_id, p.player_number, p.player_name, p.position, p.player_team, t.team_name
+      HAVING SUM(s.goals) > 0
+      ORDER BY total_goals DESC, total_assists DESC, p.player_name ASC
+      LIMIT 1
+    `),
+    query(`
+      SELECT
+        p.player_id,
+        p.player_number,
+        p.player_name,
+        p.position,
+        p.player_team AS player_team_number,
+        t.team_name AS player_team_name,
+        SUM(s.clean_sheets) AS total_clean_sheets
+      FROM stats s
+      JOIN players p ON s.player_id = p.player_id
+      JOIN teams t ON p.player_team = t.team_number
+      WHERE LOWER(p.position) = 'gk' OR LOWER(p.position) LIKE '%keeper%'
+      GROUP BY p.player_id, p.player_number, p.player_name, p.position, p.player_team, t.team_name
+      HAVING SUM(s.clean_sheets) > 0
+      ORDER BY total_clean_sheets DESC, p.player_name ASC
+      LIMIT 1
+    `),
+    query(`
+      SELECT team_number, team_name, P, W, D, L, GF, GA, GD, Pts
+      FROM league_table
+      ORDER BY Pts DESC, GD DESC, GF DESC, team_name ASC
+      LIMIT 1
+    `),
+    query(`
+      SELECT
+        m.match_id,
+        m.match_date,
+        m.match_time,
+        p.player_id,
+        p.player_number,
+        p.player_name,
+        p.position,
+        p.player_team AS player_team_number,
+        t.team_name AS player_team_name,
+        s.goals,
+        s.assists,
+        s.clean_sheets,
+        s.yellow_cards,
+        s.red_cards
+      FROM matches m
+      JOIN stats s ON m.match_id = s.match_id
+      JOIN players p ON s.player_id = p.player_id
+      JOIN teams t ON p.player_team = t.team_number
+      WHERE m.status = 'played'
+      ORDER BY
+        m.match_date DESC,
+        m.match_time DESC,
+        m.match_id DESC,
+        s.goals DESC,
+        s.assists DESC,
+        s.clean_sheets DESC,
+        s.red_cards ASC,
+        s.yellow_cards ASC,
+        p.player_name ASC
+      LIMIT 1
+    `)
+  ]);
+
+  const topScorer = topScorerRows[0] || null;
+  const topGoalkeeper = topGoalkeeperRows[0] || null;
+  const topTeam = topTeamRows[0] || null;
+  const manOfTheMatch = manOfTheMatchRows[0] || null;
+
+  return [
+    mergeAutomaticSpotlightAward(
+      "best_player_of_week",
+      topScorer
+        ? {
+            honor_type: "best_player_of_week",
+            player_id: topScorer.player_id,
+            player_name: topScorer.player_name,
+            player_number: topScorer.player_number,
+            position: topScorer.position,
+            player_team_number: topScorer.player_team_number,
+            player_team_name: topScorer.player_team_name,
+            team_number: null,
+            team_name: null,
+            title: getSpotlightTitle("best_player_of_week"),
+            description: `${topScorer.player_name} leads the tournament with ${topScorer.total_goals} goal${topScorer.total_goals === 1 ? "" : "s"}.`,
+            updated_at: null
+          }
+        : null,
+      manualAwardsMap
+    ),
+    mergeAutomaticSpotlightAward(
+      "man_of_the_match",
+      manOfTheMatch
+        ? {
+            honor_type: "man_of_the_match",
+            player_id: manOfTheMatch.player_id,
+            player_name: manOfTheMatch.player_name,
+            player_number: manOfTheMatch.player_number,
+            position: manOfTheMatch.position,
+            player_team_number: manOfTheMatch.player_team_number,
+            player_team_name: manOfTheMatch.player_team_name,
+            team_number: null,
+            team_name: null,
+            title: getSpotlightTitle("man_of_the_match"),
+            description: `Latest played match standout with ${manOfTheMatch.goals} goal${manOfTheMatch.goals === 1 ? "" : "s"} and ${manOfTheMatch.assists} assist${manOfTheMatch.assists === 1 ? "" : "s"}.`,
+            updated_at: null
+          }
+        : null,
+      manualAwardsMap
+    ),
+    mergeAutomaticSpotlightAward(
+      "best_goalkeeper",
+      topGoalkeeper
+        ? {
+            honor_type: "best_goalkeeper",
+            player_id: topGoalkeeper.player_id,
+            player_name: topGoalkeeper.player_name,
+            player_number: topGoalkeeper.player_number,
+            position: topGoalkeeper.position,
+            player_team_number: topGoalkeeper.player_team_number,
+            player_team_name: topGoalkeeper.player_team_name,
+            team_number: null,
+            team_name: null,
+            title: getSpotlightTitle("best_goalkeeper"),
+            description: `${topGoalkeeper.player_name} has ${topGoalkeeper.total_clean_sheets} clean sheet${topGoalkeeper.total_clean_sheets === 1 ? "" : "s"} so far.`,
+            updated_at: null
+          }
+        : null,
+      manualAwardsMap
+    ),
+    mergeAutomaticSpotlightAward(
+      "best_team_of_week",
+      topTeam
+        ? {
+            honor_type: "best_team_of_week",
+            player_id: null,
+            player_name: null,
+            player_number: null,
+            position: null,
+            player_team_number: null,
+            player_team_name: null,
+            team_number: topTeam.team_number,
+            team_name: topTeam.team_name,
+            title: getSpotlightTitle("best_team_of_week"),
+            description: `${topTeam.team_name} leads the table with ${topTeam.Pts} point${topTeam.Pts === 1 ? "" : "s"} and GD ${topTeam.GD}.`,
+            updated_at: null
+          }
+        : null,
+      manualAwardsMap
+    ),
+    mergeAutomaticSpotlightAward(
+      "best_team_of_month",
+      topTeam
+        ? {
+            honor_type: "best_team_of_month",
+            player_id: null,
+            player_name: null,
+            player_number: null,
+            position: null,
+            player_team_number: null,
+            player_team_name: null,
+            team_number: topTeam.team_number,
+            team_name: topTeam.team_name,
+            title: getSpotlightTitle("best_team_of_month"),
+            description: `${topTeam.team_name} is the current long-form leader with ${topTeam.W} win${topTeam.W === 1 ? "" : "s"} and ${topTeam.Pts} points.`,
+            updated_at: null
+          }
+        : null,
+      manualAwardsMap
+    )
+  ].filter(Boolean);
 }
 
 function pickBestEntityMatch(question, entities, valueGetter) {
@@ -935,16 +1147,6 @@ function mapDatabaseError(error) {
   throw error;
 }
 
-function resolveDatabaseConfig() {
-  return {
-    host: process.env.DB_HOST || process.env.MYSQLHOST,
-    port: Number(process.env.DB_PORT || process.env.MYSQLPORT || 3306),
-    user: process.env.DB_USER || process.env.MYSQLUSER,
-    password: process.env.DB_PASSWORD ?? process.env.MYSQLPASSWORD ?? "",
-    database: process.env.DB_NAME || process.env.MYSQLDATABASE
-  };
-}
-
 function getPool() {
   const config = resolveDatabaseConfig();
   const missing = ["host", "user", "database"].filter((key) => !config[key]);
@@ -954,16 +1156,11 @@ function getPool() {
   }
 
   if (!pool) {
-    pool = mysql.createPool({
-      host: config.host,
-      port: config.port,
-      user: config.user,
-      password: config.password,
-      database: config.database,
+    pool = mysql.createPool(createMysqlPoolConfig({
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0
-    });
+    }));
   }
 
   return pool;

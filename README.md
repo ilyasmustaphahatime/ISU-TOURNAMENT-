@@ -43,6 +43,7 @@ From the project root:
 ```
 
 This creates a clean `football_db` database with empty tables and views so organizers can add the tournament data from the website.
+On managed MySQL hosts, the script can also run against an existing database when the user does not have permission to create databases.
 
 ## Run the project
 From the project root:
@@ -65,24 +66,21 @@ npm.cmd run dev
 ```
 
 ## Public hosting
-Recommended path: Railway with a Railway MySQL service.
+Recommended free path: Render for the web service + Aiven MySQL for the database.
 
-1. Push this project to GitHub.
-2. Create a Railway project.
-3. Add a MySQL database service in the same Railway project.
-4. Add a web service from this GitHub repo.
-5. In the web service, set `NODE_ENV=production`.
-6. In the web service, connect the database variables from the MySQL service so the app receives `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, and `MYSQLDATABASE`.
-7. If you want the website chat to use Gemini in production, also set `GEMINI_API_KEY` and optionally `GEMINI_MODEL` in the Railway web service.
-8. Railway will read [railway.json](railway.json), so it will:
-   - start with `npm start`
-   - run `node backend/setup-db.js` before deploy
-   - use `/api/health` as the health check
-9. Open the web service `Settings` -> `Networking`, then click `Generate Domain`.
-10. Open the generated public URL and test `/api/health`.
+The app now supports:
 
-The app now supports both local `DB_*` variables and hosted `MYSQL*` variables.
-The included [railway.json](railway.json) is set up for a single web service deployment.
+- local `DB_*` variables
+- hosted `MYSQL*` variables
+- `DATABASE_URL`
+- optional hosted SSL variables for managed MySQL providers
+
+Use:
+
+- [render.yaml](render.yaml) for the Render web service blueprint
+- [RENDER_AIVEN_DEPLOY.md](RENDER_AIVEN_DEPLOY.md) for the full free-hosting walkthrough
+
+Legacy paid Railway setup is still documented in [RAILWAY_DEPLOY.md](RAILWAY_DEPLOY.md).
 
 ## Notes
 - If `/api/health` shows `mode: "in-memory"`, the app is running but MySQL credentials are still wrong or the DB was not set up yet.
@@ -91,5 +89,4 @@ The included [railway.json](railway.json) is set up for a single web service dep
 - Organizer password format: `name + 123`
 - If `GEMINI_API_KEY` is not set, the chat box falls back to the local tournament answer engine.
 - If port `5000` is busy, change `PORT` in [backend/.env](backend/.env).
-- For a public deploy, generate the Railway domain after the service is healthy so players can open the site from that URL.
-
+- For a managed MySQL host that requires TLS, set `DB_SSL=true`. If you do not have a CA cert ready yet, you can start with `DB_SSL_REJECT_UNAUTHORIZED=false` and tighten it later.
