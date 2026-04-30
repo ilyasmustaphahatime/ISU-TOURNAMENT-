@@ -96,6 +96,7 @@ function resolveDatabaseConfig(options = {}) {
     user: firstDefined(process.env.DB_USER, process.env.MYSQLUSER, urlConfig.user),
     password: firstDefined(process.env.DB_PASSWORD, process.env.MYSQLPASSWORD, urlConfig.password, ""),
     database: firstDefined(process.env.DB_NAME, process.env.MYSQLDATABASE, urlConfig.database),
+    connectTimeout: Number(firstDefined(process.env.DB_CONNECT_TIMEOUT, process.env.MYSQL_CONNECT_TIMEOUT, 30000)),
     ssl: resolveSslConfig(urlConfig)
   };
 

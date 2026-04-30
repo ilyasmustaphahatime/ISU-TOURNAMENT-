@@ -9,6 +9,7 @@ const morgan = require("morgan");
 const mysql = require("mysql2/promise");
 const { z } = require("zod");
 const { createMysqlPoolConfig, resolveDatabaseConfig } = require("./db");
+const { setupDatabaseSchema } = require("./schema");
 
 const candidateEnvPaths = [
   path.resolve(process.cwd(), ".env"),
@@ -2307,17 +2308,28 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || "Internal server error" });
 });
 
-const server = app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
-
-server.on("error", (error) => {
-  if (error.code === "EADDRINUSE") {
-    console.error(`Port ${port} is already in use. Set PORT in your .env to a free port and try again.`);
-    process.exitCode = 1;
-    return;
+async function startServer() {
+  try {
+    const database = await setupDatabaseSchema();
+    console.log(`Database schema ready for "${database}".`);
+  } catch (error) {
+    console.warn(`Database schema setup skipped: ${error.message || error}`);
   }
 
-  console.error("Failed to start server:", error);
-  process.exitCode = 1;
-});
+  const server = app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+
+  server.on("error", (error) => {
+    if (error.code === "EADDRINUSE") {
+      console.error(`Port ${port} is already in use. Set PORT in your .env to a free port and try again.`);
+      process.exitCode = 1;
+      return;
+    }
+
+    console.error("Failed to start server:", error);
+    process.exitCode = 1;
+  });
+}
+
+startServer();
